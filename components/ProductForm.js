@@ -93,16 +93,16 @@ export default function ProductForm({
 
   return (
     <form onSubmit={saveProduct}>
-      <label>Product name</label>
+      <label>Nombre de Producto</label>
       <input
         type="text"
-        placeholder="product name"
+        placeholder="Nombre del producto"
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
       />
-      <label>Category</label>
+      <label>Categoria</label>
       <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
-        <option value="">Uncategorized</option>
+        <option value="">Sin categoria</option>
         {categories.length > 0 &&
           categories.map((c) => (
             <option key={c._id} value={c._id}>
@@ -128,7 +128,7 @@ export default function ProductForm({
             </div>
           </div>
         ))}
-      <label>Photos</label>
+      <label>Set de Fotos</label>
       <div className="mb-2 flex flex-wrap gap-1">
         <ReactSortable
           list={images}
@@ -165,25 +165,25 @@ export default function ProductForm({
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
             />
           </svg>
-          <div>Add image</div>
+          <div>Añadir Imagen</div>
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
       </div>
-      <label>Description</label>
+      <label>Descripción</label>
       <textarea
-        placeholder="description"
+        placeholder="descripcion"
         value={description}
         onChange={(ev) => setDescription(ev.target.value)}
       />
-      <label>Price (in USD)</label>
+      <label>Precio (en Dólares)</label>
       <input
         type="number"
-        placeholder="price"
+        placeholder="precio"
         value={price}
         onChange={(ev) => setPrice(ev.target.value)}
       />
       <button type="submit" className="btn-primary">
-        Save
+        Subir
       </button>
     </form>
   );
