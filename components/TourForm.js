@@ -4,7 +4,7 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { ReactSortable } from "react-sortablejs";
 
-export default function ProductForm({
+export default function TourForm({
   _id,
   title: existingTitle,
   description: existingDescription,
@@ -16,12 +16,12 @@ export default function ProductForm({
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [category, setCategory] = useState(assignedCategory || "");
-  const [productProperties, setProductProperties] = useState(
+  const [tourProperties, setTourProperties] = useState(
     assignedProperties || {}
   );
   const [price, setPrice] = useState(existingPrice || "");
   const [images, setImages] = useState(existingImages || []);
-  const [goToProducts, setGoToProducts] = useState(false);
+  const [goToTours, setGoToTours] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState([]);
   const router = useRouter();
@@ -30,7 +30,7 @@ export default function ProductForm({
       setCategories(result.data);
     });
   }, []);
-  async function saveProduct(ev) {
+  async function saveTour(ev) {
     ev.preventDefault();
     const data = {
       title,
@@ -38,19 +38,19 @@ export default function ProductForm({
       price,
       images,
       category,
-      properties: productProperties,
+      properties: tourProperties,
     };
     if (_id) {
       //update
-      await axios.put("/api/products", { ...data, _id });
+      await axios.put("/api/tours", { ...data, _id });
     } else {
       //create
-      await axios.post("/api/products", data);
+      await axios.post("/api/tours", data);
     }
-    setGoToProducts(true);
+    setGoToTours(true);
   }
-  if (goToProducts) {
-    router.push("/products");
+  if (goToTours) {
+    router.push("/tours");
   }
   async function uploadImages(ev) {
     const files = ev.target?.files;
@@ -70,11 +70,11 @@ export default function ProductForm({
   function updateImagesOrder(images) {
     setImages(images);
   }
-  function setProductProp(propName, value) {
-    setProductProperties((prev) => {
-      const newProductProps = { ...prev };
-      newProductProps[propName] = value;
-      return newProductProps;
+  function setTourProp(propName, value) {
+    setTourProperties((prev) => {
+      const newTourProps = { ...prev };
+      newTourProps[propName] = value;
+      return newTourProps;
     });
   }
 
@@ -92,11 +92,11 @@ export default function ProductForm({
   }
 
   return (
-    <form onSubmit={saveProduct}>
-      <label>Product name</label>
+    <form onSubmit={saveTour}>
+      <label>Tour name</label>
       <input
         type="text"
-        placeholder="product name"
+        placeholder="tour name"
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
       />
@@ -116,8 +116,8 @@ export default function ProductForm({
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
             <div>
               <select
-                value={productProperties[p.name]}
-                onChange={(ev) => setProductProp(p.name, ev.target.value)}
+                value={tourProperties[p.name]}
+                onChange={(ev) => setTourProp(p.name, ev.target.value)}
               >
                 {p.values.map((v) => (
                   <option key={v} value={v}>
