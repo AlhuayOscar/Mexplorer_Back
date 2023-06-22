@@ -1,4 +1,4 @@
-import { model, models, Schema } from "mongoose";
+import { model, models, Schema, mongoose }  from "mongoose";
 
 const TourSchema = new Schema({
   name: { type: String, required: true },
