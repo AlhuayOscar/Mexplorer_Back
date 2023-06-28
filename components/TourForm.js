@@ -6,21 +6,44 @@ import { ReactSortable } from "react-sortablejs";
 
 export default function TourForm({
   _id,
-  title: existingTitle,
+  name: existingName,
+  subtitle: existingSubtitle,
   description: existingDescription,
+  duration: existingDuration,
   price: existingPrice,
+  reservation: existingReservation,
+  reservationPrice: existingReservationPrice,
   images: existingImages,
+  includes: existingIncludes,
+  requirements: existingRequirements,
+  review: existingReview,
+  notes: existingNotes,
+  promo: existingPromo,
+  promoPrice: existingPromoPrice,
   category: assignedCategory,
   properties: assignedProperties,
 }) {
-  const [title, setTitle] = useState(existingTitle || "");
+  const [name, setName] = useState(existingName || "");
+  const [subtitle, setSubtitle] = useState(existingSubtitle || "");
   const [description, setDescription] = useState(existingDescription || "");
+  const [duration, setDuration] = useState(existingDuration || 0);
+  const [price, setPrice] = useState(existingPrice || 0);
+  const [reservation, setReservation] = useState(existingReservation || false);
+  const [reservationPrice, setReservationPrice] = useState(
+    existingReservationPrice || 0
+  );
+  const [images, setImages] = useState(existingImages || []);
+  const [includes, setIncludes] = useState(existingIncludes || []);
+  const [requirements, setRequirements] = useState(existingRequirements || []);
+  const [review, setReview] = useState(existingReview || []);
+  const [notes, setNotes] = useState(existingNotes || "");
+  const [promo, setPromo] = useState(existingPromo || false);
+  const [promoPrice, setPromoPrice] = useState(existingPromoPrice || 0);
+
   const [category, setCategory] = useState(assignedCategory || "");
   const [tourProperties, setTourProperties] = useState(
     assignedProperties || {}
   );
-  const [price, setPrice] = useState(existingPrice || "");
-  const [images, setImages] = useState(existingImages || []);
   const [goToTours, setGoToTours] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -33,13 +56,24 @@ export default function TourForm({
   async function saveTour(ev) {
     ev.preventDefault();
     const data = {
-      title,
+      name,
+      subtitle,
       description,
+      duration,
       price,
+      reservation,
+      reservationPrice,
       images,
+      includes,
+      requirements,
+      review,
+      notes,
+      promo,
+      promoPrice,
       category,
       properties: tourProperties,
     };
+    console.log(data);
     if (_id) {
       //update
       await axios.put("/api/tours", { ...data, _id });
@@ -77,6 +111,10 @@ export default function TourForm({
       return newTourProps;
     });
   }
+  function handleIncludes(e) {
+    const name = e.target.value;
+    setIncludes((prev) => [...prev, name]);
+  }
 
   const propertiesToFill = [];
   if (categories.length > 0 && category) {
@@ -89,18 +127,25 @@ export default function TourForm({
       propertiesToFill.push(...parentCat.properties);
       catInfo = parentCat;
     }
+    console.log(propertiesToFill, "propertiesToFill");
   }
 
   return (
     <form onSubmit={saveTour}>
-      <label>Tour name</label>
+      <label>Nombre del tour</label>
       <input
         type="text"
-        placeholder="tour name"
-        value={title}
-        onChange={(ev) => setTitle(ev.target.value)}
+        placeholder="Nombre del tour"
+        value={name}
+        onChange={(ev) => setName(ev.target.value)}
       />
-      <label>Category</label>
+      <label>Pequeña descripción para la tarjeta</label>
+      <textarea
+        placeholder="Resumen de descripción"
+        value={subtitle}
+        onChange={(ev) => setSubtitle(ev.target.value)}
+      />
+      <label>Categoría</label>
       <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
         <option value="">Uncategorized</option>
         {categories.length > 0 &&
@@ -115,20 +160,61 @@ export default function TourForm({
           <div key={p.name} className="">
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
             <div>
-              <select
+              <h2
                 value={tourProperties[p.name]}
                 onChange={(ev) => setTourProp(p.name, ev.target.value)}
               >
                 {p.values.map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
+                  <div key={v}>
+                    <label>{v}</label>
+                    <input type="checkbox" key={v} value={v} />
+                  </div>
                 ))}
-              </select>
+              </h2>
             </div>
           </div>
         ))}
-      <label>Photos</label>
+      <label>Duración (cantidad de horas)</label>
+      <input
+        type="number"
+        value={duration}
+        onChange={(ev) => setDuration(ev.target.value)}
+      />
+      <label>¿Se puede reservar?</label>
+      <label>
+        <input
+          type="radio"
+          name="opcion"
+          value={reservation}
+          onChange={(ev) => setReservation(true)}
+        />
+        Sí
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="opcion"
+          value={reservation}
+          onChange={(ev) => setReservation(false)}
+        />
+        No
+      </label>
+      <div></div>
+      {reservation === true ? (
+        <div>
+          <label>Precio de la reserva (en USD)</label>
+          <input
+            type="number"
+            placeholder="precio"
+            value={reservationPrice}
+            onChange={(ev) => setReservationPrice(ev.target.value)}
+          />
+        </div>
+      ) : (
+        <div></div>
+      )}
+
+      <label>Fotos</label>
       <div className="mb-2 flex flex-wrap gap-1">
         <ReactSortable
           list={images}
@@ -165,17 +251,73 @@ export default function TourForm({
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
             />
           </svg>
-          <div>Add image</div>
+          <div>Agregar imagen</div>
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
       </div>
-      <label>Description</label>
+
+      <label>¿Qué incluye?</label>
+      <input
+        type="text"
+        placeholder="Lista de incluye"
+        value={includes}
+        onChange={(e) => setIncludes(e.target.value)}
+      />
+      <label>¿Qué requiere?</label>
+      <input
+        type="text"
+        placeholder="Lista de requisitos"
+        value={requirements}
+        onChange={(e) => setRequirements(e.target.value)}
+      />
+      <label>Notas</label>
+      <input
+        type="text"
+        placeholder="Notas sobre el tour"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+      />
+      <label>¿Tiene precio promocional?</label>
+      <label>
+        <input
+          type="radio"
+          name="opcion"
+          value={promo}
+          onChange={(ev) => setPromo(true)}
+        />
+        Sí
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="opcion"
+          value={promo}
+          onChange={(ev) => setPromo(false)}
+        />
+        No
+      </label>
+      <div></div>
+      {promo === true ? (
+        <div>
+          <label>Precio con promoción (en USD)</label>
+          <input
+            type="number"
+            placeholder="precio"
+            value={promoPrice}
+            onChange={(ev) => setPromoPrice(ev.target.value)}
+          />
+        </div>
+      ) : (
+        <div></div>
+      )}
+
+      <label>Descripción</label>
       <textarea
         placeholder="description"
         value={description}
         onChange={(ev) => setDescription(ev.target.value)}
       />
-      <label>Price (in USD)</label>
+      <label>Precio del tour (en USD)</label>
       <input
         type="number"
         placeholder="price"
@@ -183,7 +325,7 @@ export default function TourForm({
         onChange={(ev) => setPrice(ev.target.value)}
       />
       <button type="submit" className="btn-primary">
-        Save
+        Guardar
       </button>
     </form>
   );

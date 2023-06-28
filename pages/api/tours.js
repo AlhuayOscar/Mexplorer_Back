@@ -16,9 +16,9 @@ export default async function handle(req, res) {
   }
 
   if (method === 'POST') {
-    const {title,description,price,images,category,properties} = req.body;
+    const {name, subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties} = req.body;
     const tourDoc = await Tour.create({
-      title,description,price,images,category,properties,
+      name,subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties
     })
     res.json(tourDoc);
   }
