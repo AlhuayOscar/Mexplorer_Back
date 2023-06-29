@@ -16,16 +16,16 @@ export default async function handle(req, res) {
   }
 
   if (method === 'POST') {
-    const {name, subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties} = req.body;
+    const {name, subtitle, description, duration, price, reservation, reservationPrice, images, includes, requirements, review, notes, promo, promoPrice, category, properties} = req.body;
     const tourDoc = await Tour.create({
-      name,subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties
+      name,subtitle, description, duration, price, reservation, reservationPrice, images, includes, requirements, review, notes, promo, promoPrice, category, properties
     })
     res.json(tourDoc);
   }
 
   if (method === 'PUT') {
-    const {name, subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties, _id} = req.body;
-    await Tour.updateOne({_id}, {name, subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties});
+    const {name, subtitle, description, duration, price, reservation, reservationPrice, images, includes, requirements, review, notes, promo, promoPrice, category, properties, _id} = req.body;
+    await Tour.updateOne({_id}, {name, subtitle, description, duration, price, reservation, reservationPrice, images, includes, requirements, review, notes, promo, promoPrice, category, properties});
     res.json(true);
   }
 

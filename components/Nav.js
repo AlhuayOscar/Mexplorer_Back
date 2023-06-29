@@ -2,8 +2,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import Logo from "@/components/Logo";
+import { withSwal } from "react-sweetalert2";
 
-export default function Nav({ show }) {
+function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-sm";
   const inactiveIcon = "w-6 h-6";
@@ -11,8 +12,22 @@ export default function Nav({ show }) {
   const router = useRouter();
   const { pathname } = router;
   async function logout() {
-    await router.push("/");
-    await signOut();
+    swal
+      .fire({
+        title: "¿Estás seguro?",
+        text: `¿Querés cerrar sesión?`,
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonText: "Sí, salir",
+        confirmButtonColor: "#d55",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await router.push("/");
+          await signOut();
+        }
+      });
   }
   return (
     <aside
@@ -55,9 +70,7 @@ export default function Nav({ show }) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={
-              pathname.includes("/tours") ? activeIcon : inactiveIcon
-            }
+            className={pathname.includes("/tours") ? activeIcon : inactiveIcon}
           >
             <path
               strokeLinecap="round"
@@ -139,3 +152,5 @@ export default function Nav({ show }) {
     </aside>
   );
 }
+
+export default withSwal(({ swal }, ref) => <Nav swal={swal} />);
