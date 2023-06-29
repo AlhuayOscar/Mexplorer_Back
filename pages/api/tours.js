@@ -24,8 +24,8 @@ export default async function handle(req, res) {
   }
 
   if (method === 'PUT') {
-    const {title,description,price,images,category,properties,_id} = req.body;
-    await Tour.updateOne({_id}, {title,description,price,images,category,properties});
+    const {name, subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties, _id} = req.body;
+    await Tour.updateOne({_id}, {name, subtitle, description, duration, price, reservation, reservationPrice, photos, includes, requirements, review, notes, promo, promoPrice, category, properties});
     res.json(true);
   }
 

@@ -24,13 +24,13 @@ export default function DeleteTourPage() {
   }
   return (
     <Layout>
-      <h1 className="text-center">Do you really want to delete
-        &nbsp;&quot;{tourInfo?.title}&quot;?
+      <h1 className="text-center">¿¿De verdad querés borrar el tour 
+        &nbsp;&quot;{tourInfo?.name}&quot;, Nico??
       </h1>
       <div className="flex gap-2 justify-center">
         <button
           onClick={deleteTour}
-          className="btn-red">Yes</button>
+          className="btn-red">SÍ</button>
         <button
           className="btn-default"
           onClick={goBack}>

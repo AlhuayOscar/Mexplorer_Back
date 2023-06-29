@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 export default function NewTour() {
   return (
     <Layout>
-      <h1>New Tour</h1>
+      <h1>Nuevo Tour</h1>
       <TourForm />
     </Layout>
   );

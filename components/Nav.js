@@ -67,7 +67,7 @@ export default function Nav({ show }) {
           </svg>
           Tours
         </Link>
-        <Link
+        {/* <Link
           href={"/categories"}
           className={
             pathname.includes("/categories") ? activeLink : inactiveLink
@@ -90,7 +90,7 @@ export default function Nav({ show }) {
             />
           </svg>
           Categorias
-        </Link>
+        </Link> */}
         <Link
           href={"/orders"}
           className={pathname.includes("/orders") ? activeLink : inactiveLink}

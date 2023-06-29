@@ -18,7 +18,7 @@ export default function EditTourPage() {
   }, [id]);
   return (
     <Layout>
-      <h1>Edit tour</h1>
+      <h1>Editar tour</h1>
       {tourInfo && (
         <TourForm {...tourInfo} />
       )}

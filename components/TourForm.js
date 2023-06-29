@@ -16,12 +16,11 @@ export default function TourForm({
   images: existingImages,
   includes: existingIncludes,
   requirements: existingRequirements,
-  review: existingReview,
   notes: existingNotes,
   promo: existingPromo,
   promoPrice: existingPromoPrice,
-  category: assignedCategory,
-  properties: assignedProperties,
+  // category: assignedCategory,
+  // properties: assignedProperties,
 }) {
   const [name, setName] = useState(existingName || "");
   const [subtitle, setSubtitle] = useState(existingSubtitle || "");
@@ -35,24 +34,23 @@ export default function TourForm({
   const [images, setImages] = useState(existingImages || []);
   const [includes, setIncludes] = useState(existingIncludes || []);
   const [requirements, setRequirements] = useState(existingRequirements || []);
-  const [review, setReview] = useState(existingReview || []);
   const [notes, setNotes] = useState(existingNotes || "");
   const [promo, setPromo] = useState(existingPromo || false);
   const [promoPrice, setPromoPrice] = useState(existingPromoPrice || 0);
 
-  const [category, setCategory] = useState(assignedCategory || "");
-  const [tourProperties, setTourProperties] = useState(
-    assignedProperties || {}
-  );
+  // const [category, setCategory] = useState(assignedCategory || "");
+  // const [tourProperties, setTourProperties] = useState(
+  //   assignedProperties || {}
+  // );
   const [goToTours, setGoToTours] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const router = useRouter();
-  useEffect(() => {
-    axios.get("/api/categories").then((result) => {
-      setCategories(result.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get("/api/categories").then((result) => {
+  //     setCategories(result.data);
+  //   });
+  // }, []);
   async function saveTour(ev) {
     ev.preventDefault();
     const data = {
@@ -66,12 +64,11 @@ export default function TourForm({
       images,
       includes,
       requirements,
-      review,
       notes,
       promo,
       promoPrice,
-      category,
-      properties: tourProperties,
+      // category,
+      // properties: tourProperties,
     };
     console.log(data);
     if (_id) {
@@ -111,24 +108,24 @@ export default function TourForm({
       return newTourProps;
     });
   }
-  function handleIncludes(e) {
-    const name = e.target.value;
-    setIncludes((prev) => [...prev, name]);
-  }
+  // function handleIncludes(e) {
+  //   const name = e.target.value;
+  //   setIncludes((prev) => [...prev, name]);
+  // }
 
-  const propertiesToFill = [];
-  if (categories.length > 0 && category) {
-    let catInfo = categories.find(({ _id }) => _id === category);
-    propertiesToFill.push(...catInfo.properties);
-    while (catInfo?.parent?._id) {
-      const parentCat = categories.find(
-        ({ _id }) => _id === catInfo?.parent?._id
-      );
-      propertiesToFill.push(...parentCat.properties);
-      catInfo = parentCat;
-    }
-    console.log(propertiesToFill, "propertiesToFill");
-  }
+  // const propertiesToFill = [];
+  // if (categories.length > 0 && category) {
+  //   let catInfo = categories.find(({ _id }) => _id === category);
+  //   propertiesToFill.push(...catInfo.properties);
+  //   while (catInfo?.parent?._id) {
+  //     const parentCat = categories.find(
+  //       ({ _id }) => _id === catInfo?.parent?._id
+  //     );
+  //     propertiesToFill.push(...parentCat.properties);
+  //     catInfo = parentCat;
+  //   }
+  //   console.log(propertiesToFill, "propertiesToFill");
+  // }
 
   return (
     <form onSubmit={saveTour}>
@@ -145,17 +142,17 @@ export default function TourForm({
         value={subtitle}
         onChange={(ev) => setSubtitle(ev.target.value)}
       />
-      <label>Categoría</label>
+      {/* <label>Categoría</label>
       <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
-        <option value="">Uncategorized</option>
+        <option value="">Sin categoría</option>
         {categories.length > 0 &&
           categories.map((c) => (
             <option key={c._id} value={c._id}>
               {c.name}
             </option>
           ))}
-      </select>
-      {propertiesToFill.length > 0 &&
+      </select> */}
+      {/* {propertiesToFill.length > 0 &&
         propertiesToFill.map((p) => (
           <div key={p.name} className="">
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
@@ -173,7 +170,7 @@ export default function TourForm({
               </h2>
             </div>
           </div>
-        ))}
+        ))} */}
       <label>Duración (cantidad de horas)</label>
       <input
         type="number"

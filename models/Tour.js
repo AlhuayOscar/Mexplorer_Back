@@ -15,8 +15,8 @@ const TourSchema = new Schema({
   notes: { type: String },
   promo: { type: Boolean, required: true },
   promoPrice: { type: Number },
-  category: { type: mongoose.Types.ObjectId, ref: "Category" },
-  properties: { type: Object },
+  // category: { type: mongoose.Types.ObjectId, ref: "Category" },
+  // properties: { type: Object },
 });
 
 export const Tour = models?.Tour || model("Tour", TourSchema);
