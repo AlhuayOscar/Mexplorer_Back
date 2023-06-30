@@ -12,7 +12,7 @@ const TourSchema = new Schema({
   includes: { type: [String] },
   requirements: { type: [String] },
   review: { type: [String] },
-  notes: { type: String },
+  notes: { type: [String] },
   promo: { type: Boolean, required: true },
   promoPrice: { type: Number },
   // category: { type: mongoose.Types.ObjectId, ref: "Category" },

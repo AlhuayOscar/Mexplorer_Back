@@ -101,13 +101,13 @@ export default function TourForm({
   function updateImagesOrder(images) {
     setImages(images);
   }
-  function setTourProp(propName, value) {
-    setTourProperties((prev) => {
-      const newTourProps = { ...prev };
-      newTourProps[propName] = value;
-      return newTourProps;
-    });
-  }
+  // function setTourProp(propName, value) {
+  //   setTourProperties((prev) => {
+  //     const newTourProps = { ...prev };
+  //     newTourProps[propName] = value;
+  //     return newTourProps;
+  //   });
+  // }
   // function handleIncludes(e) {
   //   const name = e.target.value;
   //   setIncludes((prev) => [...prev, name]);
@@ -126,6 +126,30 @@ export default function TourForm({
   //   }
   //   console.log(propertiesToFill, "propertiesToFill");
   // }
+
+  function addIncludes() {
+    setIncludes((prev) => [...prev, ""]);
+  }
+
+  function removeIncludes(indexToRemove) {
+    setIncludes((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  function addRequirements() {
+    setRequirements((prev) => [...prev, ""]);
+  }
+
+  function removeRequirements(indexToRemove) {
+    setRequirements((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
 
   return (
     <form onSubmit={saveTour}>
@@ -178,24 +202,24 @@ export default function TourForm({
         onChange={(ev) => setDuration(ev.target.value)}
       />
       <label>¿Se puede reservar?</label>
-      <label>
+      <div className="flex">
+        <label className="w-2">Sí</label>
         <input
           type="radio"
           name="opcion"
           value={reservation}
           onChange={(ev) => setReservation(true)}
         />
-        Sí
-      </label>
-      <label>
+      </div>
+      <div className="flex content-center">
+        <label className="w-2">No</label>
         <input
           type="radio"
           name="opcion"
           value={reservation}
           onChange={(ev) => setReservation(false)}
         />
-        No
-      </label>
+      </div>
       <div></div>
       {reservation === true ? (
         <div>
@@ -252,21 +276,64 @@ export default function TourForm({
           <input type="file" onChange={uploadImages} className="hidden" />
         </label>
       </div>
-
-      <label>¿Qué incluye?</label>
-      <input
-        type="text"
-        placeholder="Lista de incluye"
-        value={includes}
-        onChange={(e) => setIncludes(e.target.value)}
-      />
-      <label>¿Qué requiere?</label>
-      <input
-        type="text"
-        placeholder="Lista de requisitos"
-        value={requirements}
-        onChange={(e) => setRequirements(e.target.value)}
-      />
+      <div className="mb-2">
+        <label>¿Qué incluye?</label>
+        <button onClick={addIncludes} type="button">
+          Añadir
+        </button>
+        {includes.length > 0 &&
+          includes.map((include, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={include}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newIncludes = [...includes];
+                  newIncludes[index] = ev.target.value;
+                  setIncludes(newIncludes);
+                }}
+                placeholder="Nombre de include"
+              />
+              <button
+                onClick={() => removeIncludes(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
+      <div className="mb-2">
+        <label>¿Qué requiere?</label>
+        <button onClick={addRequirements} type="button">
+          Añadir
+        </button>
+        {requirements.length > 0 &&
+          requirements.map((requirement, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={requirement}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newRequirement = [...requirements];
+                  newRequirement[index] = ev.target.value;
+                  setRequirements(newRequirement);
+                }}
+                placeholder="Requiere?"
+              />
+              <button
+                onClick={() => removeRequirements(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
       <label>Notas</label>
       <input
         type="text"
