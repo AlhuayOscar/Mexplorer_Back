@@ -2,25 +2,25 @@ import Layout from "@/components/Layout";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import TourForm from "@/components/TourForm";
+import BlogForm from "@/components/BlogForm";
 
-export default function EditTourPage() {
-  const [tourInfo, setTourInfo] = useState(null);
+export default function EditBlogPage() {
+  const [blogInfo, setBlogInfo] = useState(null);
   const router = useRouter();
   const {id} = router.query;
   useEffect(() => {
     if (!id) {
       return;
     }
-    axios.get('/api/tours?_id='+id).then(response => {
-      setTourInfo(response.data);
+    axios.get('/api/blogs?_id='+id).then(response => {
+      setBlogInfo(response.data);
     });
   }, [id]);
   return (
     <Layout>
-      <h1>Editar tour</h1>
-      {tourInfo && (
-        <TourForm {...tourInfo} />
+      <h1>Editar post</h1>
+      {blogInfo && (
+        <BlogForm {...blogInfo} />
       )}
     </Layout>
   );

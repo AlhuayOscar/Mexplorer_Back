@@ -1,4 +1,3 @@
-
 import { Blog } from "@/models/Blog";
 import { mongooseConnect } from "@/lib/mongoose";
 import { getServerSession } from "next-auth";
@@ -9,35 +8,47 @@ export default async function handle(req, res) {
   await mongooseConnect();
   await isAdminRequest(req, res);
 
-  //   if (method === 'GET') {
-  //     res.json(await Blog.find().populate('parent'));
-  //   }
+  if (method === "GET") {
+    if (req.query?._id) {
+      res.json(await Blog.findOne({ _id: req.query._id }));
+    } else {
+      res.json(await Blog.find());
+    }
+  }
 
   if (method === "POST") {
     const { title, subtitle, description, images, date, location } = req.body;
     const blogDoc = await Blog.create({
       title,
-      subtitle, description, images, date, location
+      subtitle,
+      description,
+      images,
+      date,
+      location,
     });
     res.json(blogDoc);
   }
 
   if (method === "PUT") {
-    const { name, parentCategory, properties, _id } = req.body;
-    const categoryDoc = await Category.updateOne(
+    const { title, subtitle, description, images, date, location, _id } =
+      req.body;
+    const blogDoc = await Blog.updateOne(
       { _id },
       {
-        name,
-        parent: parentCategory || undefined,
-        properties,
+        title,
+        subtitle,
+        description,
+        images,
+        date,
+        location,
       }
     );
-    res.json(categoryDoc);
+    res.json(blogDoc);
   }
 
   if (method === "DELETE") {
     const { _id } = req.query;
-    await Category.deleteOne({ _id });
+    await Blog.deleteOne({ _id });
     res.json("ok");
   }
 }
