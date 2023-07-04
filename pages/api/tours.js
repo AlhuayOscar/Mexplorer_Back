@@ -30,8 +30,8 @@ export default async function handle(req, res) {
   }
 
   if (method === 'DELETE') {
-    if (req.query?.id) {
-      await Tour.deleteOne({_id:req.query?.id});
+    if (req.query?._id) {
+      await Tour.deleteOne({_id:req.query?._id});
       res.json(true);
     }
   }
