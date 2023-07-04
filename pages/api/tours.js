@@ -30,9 +30,7 @@ export default async function handle(req, res) {
       review,
       notes,
       promo,
-      promoPrice,
-      category,
-      properties,
+      withoutPromoPrice,
     } = req.body;
     const tourDoc = await Tour.create({
       name,
@@ -48,9 +46,7 @@ export default async function handle(req, res) {
       review,
       notes,
       promo,
-      promoPrice,
-      category,
-      properties,
+      withoutPromoPrice,
     });
     res.json(tourDoc);
   }
@@ -70,9 +66,7 @@ export default async function handle(req, res) {
       review,
       notes,
       promo,
-      promoPrice,
-      category,
-      properties,
+      withoutPromoPrice,
       _id,
     } = req.body;
     await Tour.updateOne(
@@ -91,9 +85,7 @@ export default async function handle(req, res) {
         review,
         notes,
         promo,
-        promoPrice,
-        category,
-        properties,
+        withoutPromoPrice,
       }
     );
     res.json(true);
