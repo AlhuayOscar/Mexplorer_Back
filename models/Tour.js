@@ -14,7 +14,7 @@ const TourSchema = new Schema({
   review: { type: [String] },
   notes: { type: [String] },
   promo: { type: Boolean, required: true },
-  promoPrice: { type: Number },
+  withoutPromoPrice: { type: Number },
   // category: { type: mongoose.Types.ObjectId, ref: "Category" },
   // properties: { type: Object },
 });
