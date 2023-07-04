@@ -11,14 +11,14 @@ export default function OrdersPage() {
   }, []);
   return (
     <Layout>
-      <h1>Orders</h1>
+      <h1>Pedidos</h1>
       <table className="basic">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Paid</th>
-            <th>Recipient</th>
-            <th>Products</th>
+            <th>Fecha</th>
+            <th>Está pago?</th>
+            <th>Datos del consumidor</th>
+            <th>Productos</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +37,7 @@ export default function OrdersPage() {
             <td>
               {order.line_items.map(l => (
                 <>
-                  {l.price_data?.product_data.name} x
+                  {l.price_data?.tour_data.name} x
                   {l.quantity}<br />
                 </>
               ))}

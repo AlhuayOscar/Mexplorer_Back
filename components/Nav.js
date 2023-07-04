@@ -2,8 +2,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import Logo from "@/components/Logo";
+import { withSwal } from "react-sweetalert2";
 
-export default function Nav({ show }) {
+function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-sm";
   const inactiveIcon = "w-6 h-6";
@@ -11,8 +12,22 @@ export default function Nav({ show }) {
   const router = useRouter();
   const { pathname } = router;
   async function logout() {
-    await router.push("/");
-    await signOut();
+    swal
+      .fire({
+        title: "¿Estás seguro?",
+        text: `¿Querés cerrar sesión?`,
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonText: "Sí, salir",
+        confirmButtonColor: "#d55",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await router.push("/");
+          await signOut();
+        }
+      });
   }
   return (
     <aside
@@ -46,8 +61,8 @@ export default function Nav({ show }) {
           Panel Principal
         </Link>
         <Link
-          href={"/products"}
-          className={pathname.includes("/products") ? activeLink : inactiveLink}
+          href={"/tours"}
+          className={pathname.includes("/tours") ? activeLink : inactiveLink}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -55,9 +70,7 @@ export default function Nav({ show }) {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={
-              pathname.includes("/products") ? activeIcon : inactiveIcon
-            }
+            className={pathname.includes("/tours") ? activeIcon : inactiveIcon}
           >
             <path
               strokeLinecap="round"
@@ -65,9 +78,9 @@ export default function Nav({ show }) {
               d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
             />
           </svg>
-          Productos
+          Tours
         </Link>
-        <Link
+        {/* <Link
           href={"/categories"}
           className={
             pathname.includes("/categories") ? activeLink : inactiveLink
@@ -90,6 +103,26 @@ export default function Nav({ show }) {
             />
           </svg>
           Categorias
+        </Link> */}
+        <Link
+          href={"/blogs"}
+          className={pathname.includes("/blogs") ? activeLink : inactiveLink}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className={pathname.includes("/blogs") ? activeIcon : inactiveIcon}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+            />
+          </svg>
+          Blogs
         </Link>
         <Link
           href={"/orders"}
@@ -139,3 +172,5 @@ export default function Nav({ show }) {
     </aside>
   );
 }
+
+export default withSwal(({ swal }, ref) => <Nav swal={swal} />);
