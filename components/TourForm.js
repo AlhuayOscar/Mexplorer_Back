@@ -29,14 +29,14 @@ export default function TourForm({
   const [price, setPrice] = useState(existingPrice || 0);
   const [reservation, setReservation] = useState(existingReservation || false);
   const [reservationPrice, setReservationPrice] = useState(
-    existingReservationPrice || 0
+    existingReservationPrice || null
   );
   const [images, setImages] = useState(existingImages || []);
   const [includes, setIncludes] = useState(existingIncludes || []);
   const [requirements, setRequirements] = useState(existingRequirements || []);
   const [notes, setNotes] = useState(existingNotes || "");
   const [promo, setPromo] = useState(existingPromo || false);
-  const [withoutPromoPrice, setWithoutPromoPrice] = useState(existingPromoPrice || 0);
+  const [withoutPromoPrice, setWithoutPromoPrice] = useState(existingPromoPrice || null);
 
   // const [category, setCategory] = useState(assignedCategory || "");
   // const [tourProperties, setTourProperties] = useState(
