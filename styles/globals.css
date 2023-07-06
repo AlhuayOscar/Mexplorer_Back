@@ -48,3 +48,18 @@ table.basic a {
 .btn-default {
   @apply bg-white text-gray-800 px-4 py-1 rounded-sm border border-gray-200 shadow-sm;
 }
+.animate-fadeIn {
+  animation: fadeIn 1s;
+}
+.pixelated-chart {
+  image-rendering: pixelated;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
