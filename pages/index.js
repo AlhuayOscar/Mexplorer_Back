@@ -16,11 +16,18 @@ export default function Home() {
   const [unreservedToursCount, setUnreservedToursCount] = useState(0);
 
   useEffect(() => {
-    axios.get("/api/tours").then((response) => {
-      setTourData(response.data);
-      setIsLoading(false);
-    });
-  }, []);
+    if (session) {
+      axios
+        .get("/api/tours")
+        .then((response) => {
+          setTourData(response.data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching tour data:", error);
+        });
+    }
+  }, [session]);
 
   useEffect(() => {
     if (!isLoading && tourData.length > 0) {
@@ -32,6 +39,14 @@ export default function Home() {
       setUnreservedToursCount(unreservedCount);
     }
   }, [isLoading, tourData]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   if (isLoading || status === "loading") {
     return (
