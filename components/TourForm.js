@@ -18,7 +18,7 @@ export default function TourForm({
   requirements: existingRequirements,
   notes: existingNotes,
   promo: existingPromo,
-  promoPrice: existingPromoPrice,
+  withoutPromoPrice: existingPromoPrice,
   // category: assignedCategory,
   // properties: assignedProperties,
 }) {
@@ -36,7 +36,9 @@ export default function TourForm({
   const [requirements, setRequirements] = useState(existingRequirements || []);
   const [notes, setNotes] = useState(existingNotes || "");
   const [promo, setPromo] = useState(existingPromo || false);
-  const [promoPrice, setPromoPrice] = useState(existingPromoPrice || 0);
+  const [withoutPromoPrice, setWithoutPromoPrice] = useState(
+    existingPromoPrice || 0
+  );
 
   // const [category, setCategory] = useState(assignedCategory || "");
   // const [tourProperties, setTourProperties] = useState(
@@ -66,7 +68,7 @@ export default function TourForm({
       requirements,
       notes,
       promo,
-      promoPrice,
+      withoutPromoPrice,
       // category,
       // properties: tourProperties,
     };
@@ -145,6 +147,18 @@ export default function TourForm({
 
   function removeRequirements(indexToRemove) {
     setRequirements((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  function addNotes() {
+    setNotes((prev) => [...prev, ""]);
+  }
+
+  function removeNotas(indexToRemove) {
+    setNotes((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
       });
@@ -334,14 +348,38 @@ export default function TourForm({
             </div>
           ))}
       </div>
-      <label>Notas</label>
-      <input
-        type="text"
-        placeholder="Notas sobre el tour"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-      />
-      <label>¿Tiene precio promocional?</label>
+
+      <div className="mb-2">
+        <label>Notas</label>
+        <button onClick={addNotes} type="button">
+          Añadir
+        </button>
+        {notes.length > 0 &&
+          notes.map((note, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={note}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newNote = [...notes];
+                  newNote[index] = ev.target.value;
+                  setNotes(newNote);
+                }}
+                placeholder="Notas"
+              />
+              <button
+                onClick={() => removeNote(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
+
+      <label>¿Tiene promo?</label>
       <label>
         <input
           type="radio"
@@ -363,12 +401,12 @@ export default function TourForm({
       <div></div>
       {promo === true ? (
         <div>
-          <label>Precio con promoción (en USD)</label>
+          <label>Precio anterior (en USD)</label>
           <input
             type="number"
             placeholder="precio"
-            value={promoPrice}
-            onChange={(ev) => setPromoPrice(ev.target.value)}
+            value={withoutPromoPrice}
+            onChange={(ev) => setWithoutPromoPrice(ev.target.value)}
           />
         </div>
       ) : (
