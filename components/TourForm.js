@@ -151,6 +151,18 @@ export default function TourForm({
     });
   }
 
+  function addNotes() {
+    setNotes((prev) => [...prev, ""]);
+  }
+
+  function removeNotas(indexToRemove) {
+    setNotes((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
   return (
     <form onSubmit={saveTour}>
       <label>Nombre del tour</label>
@@ -334,13 +346,37 @@ export default function TourForm({
             </div>
           ))}
       </div>
-      <label>Notas</label>
-      <input
-        type="text"
-        placeholder="Notas sobre el tour"
-        value={notes}
-        onChange={(e) => setNotes(e.target.value)}
-      />
+
+      <div className="mb-2">
+        <label>Notas</label>
+        <button onClick={addNotes} type="button">
+          Añadir
+        </button>
+        {notes.length > 0 &&
+          notes.map((note, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={note}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newNote = [...notes];
+                  newNote[index] = ev.target.value;
+                  setNotes(newNote);
+                }}
+                placeholder="Notas"
+              />
+              <button
+                onClick={() => removeNote(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
+
       <label>¿Tiene promo?</label>
       <label>
         <input
