@@ -17,16 +17,16 @@ export default function Home() {
 
   if (isLoading || status === "loading") {
     return (
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
         <img
           src="/mex_logo.png"
           alt="Logo de México"
           className="mt-4 max-w-350px max-h-full animate-fadeIn"
         />
-        <h1 className="mb-4">Cargando...</h1>
+        <h1 className="mb-4 text-white">Cargando...</h1>
         <GridLoader
           size={15}
-          color={"#000"}
+          color={"#fff"}
           loading={true}
           speedMultiplier={0.7}
         />

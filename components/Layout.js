@@ -11,12 +11,20 @@ export default function Layout({ children }) {
     return (
       <div className="bg-bgGray w-screen h-screen flex items-center">
         <div className="text-center w-full">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute top-0 left-0 w-screen h-screen object-cover z-0"
+          >
+            <source src="backsea.mp4" type="video/mp4" />
+          </video>
           <button
             onClick={() => signIn("google")}
-            className="bg-gray-600 p-2 px-4 rounded-lg text-white hover:transform hover:scale-110 transition-all duration-300"
+            className="bg-white p-2 px-5 rounded-lg text-black hover:bg-transparent hover:text-white hover:transform hover:scale-150 transition-all duration-300 shadow-2xl filter brightness-110"
           >
-            Iniciar sesión con Google{" "}
-            <GoogleIcon />
+            Iniciar sesión con Google <GoogleIcon />
           </button>
         </div>
       </div>
