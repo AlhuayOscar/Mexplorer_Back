@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { useSession } from "next-auth/react";
-import ClipLoader from "react-spinners/ClipLoader";
+import GridLoader from "react-spinners/GridLoader";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1800);
+    }, 2100);
 
     return () => clearTimeout(timer);
   }, []);
@@ -24,7 +24,12 @@ export default function Home() {
           className="mt-4 max-w-350px max-h-full animate-fadeIn"
         />
         <h1 className="mb-4">Cargando...</h1>
-        <ClipLoader size={65} color={"#000"} loading={true} />
+        <GridLoader
+          size={15}
+          color={"#000"}
+          loading={true}
+          speedMultiplier={0.7}
+        />
       </div>
     );
   }

@@ -2,6 +2,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Nav from "@/components/Nav";
 import { useState } from "react";
 import Logo from "@/components/Logo";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export default function Layout({ children }) {
   const [showNav, setShowNav] = useState(false);
@@ -12,9 +13,10 @@ export default function Layout({ children }) {
         <div className="text-center w-full">
           <button
             onClick={() => signIn("google")}
-            className="bg-gray-600 p-2 px-4 rounded-lg text-white"
+            className="bg-gray-600 p-2 px-4 rounded-lg text-white hover:transform hover:scale-110 transition-all duration-300"
           >
-            Iniciar sesión con Google
+            Iniciar sesión con Google{" "}
+            <GoogleIcon />
           </button>
         </div>
       </div>
