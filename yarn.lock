@@ -2366,6 +2366,11 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@kurkle/color@^0.3.0":
+  "integrity" "sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw=="
+  "resolved" "https://registry.npmjs.org/@kurkle/color/-/color-0.3.2.tgz"
+  "version" "0.3.2"
+
 "@mui/base@5.0.0-beta.6":
   "integrity" "sha512-jcHy6HwOX7KzRhRtL8nvIvUlxvLx2Fl6NMRCyUSQSvMTyfou9kndekz0H4HJaXvG1Y4WEifk23RYedOlrD1kEQ=="
   "resolved" "https://registry.npmjs.org/@mui/base/-/base-5.0.0-beta.6.tgz"
@@ -3583,6 +3588,13 @@
   dependencies:
     "ansi-styles" "^4.1.0"
     "supports-color" "^7.1.0"
+
+"chart.js@^4.1.1", "chart.js@^4.3.0":
+  "integrity" "sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g=="
+  "resolved" "https://registry.npmjs.org/chart.js/-/chart.js-4.3.0.tgz"
+  "version" "4.3.0"
+  dependencies:
+    "@kurkle/color" "^0.3.0"
 
 "chokidar@^3.5.3":
   "integrity" "sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw=="
@@ -6688,6 +6700,11 @@
   "integrity" "sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg=="
   "resolved" "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   "version" "1.2.1"
+
+"react-chartjs-2@^5.2.0":
+  "integrity" "sha512-98iN5aguJyVSxp5U3CblRLH67J8gkfyGNbiK3c+l1QI/G4irHMPQw44aEPmjVag+YKTyQ260NcF82GTQ3bdscA=="
+  "resolved" "https://registry.npmjs.org/react-chartjs-2/-/react-chartjs-2-5.2.0.tgz"
+  "version" "5.2.0"
 
 "react-devtools-core@^4.27.2":
   "integrity" "sha512-KwoH8/wN/+m5wTItLnsgVraGNmFrcTWR3k1VimP1HjtMMw4CNF+F5vg4S/0tzTEKIdpCi2R7mPNTC+/dswZMgw=="

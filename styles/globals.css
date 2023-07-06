@@ -51,6 +51,9 @@ table.basic a {
 .animate-fadeIn {
   animation: fadeIn 1s;
 }
+.pixelated-chart {
+  image-rendering: pixelated;
+}
 
 @keyframes fadeIn {
   0% {
