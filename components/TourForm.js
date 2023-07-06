@@ -157,7 +157,7 @@ export default function TourForm({
     setNotes((prev) => [...prev, ""]);
   }
 
-  function removeNotas(indexToRemove) {
+  function removeNotes(indexToRemove) {
     setNotes((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
@@ -369,7 +369,7 @@ export default function TourForm({
                 placeholder="Notas"
               />
               <button
-                onClick={() => removeNote(index)}
+                onClick={() => removeNotes(index)}
                 type="button"
                 className="btn-red"
               >
