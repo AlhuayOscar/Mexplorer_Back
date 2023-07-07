@@ -153,11 +153,11 @@ export default function TourForm({
     });
   }
 
-  function addNotes() {
+  function addNote() {
     setNotes((prev) => [...prev, ""]);
   }
 
-  function removeNotas(indexToRemove) {
+  function removeNote(indexToRemove) {
     setNotes((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
@@ -351,7 +351,7 @@ export default function TourForm({
 
       <div className="mb-2">
         <label>Notas</label>
-        <button onClick={addNotes} type="button">
+        <button onClick={addNote} type="button">
           Añadir
         </button>
         {notes.length > 0 &&

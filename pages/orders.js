@@ -16,9 +16,11 @@ export default function OrdersPage() {
         <thead>
           <tr>
             <th>Fecha</th>
+            <th>Tipo de orden</th>
             <th>Está pago?</th>
             <th>Datos del consumidor</th>
             <th>Productos</th>
+            <th>Cantidad</th>
           </tr>
         </thead>
         <tbody>
@@ -26,21 +28,22 @@ export default function OrdersPage() {
             orders.map((order) => (
               <tr key={order._id}>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
+                <td>{order.kind}</td>
                 <td className={order.paid ? "text-green-600" : "text-red-600"}>
                   {order.paid ? "YES" : "NO"}
                 </td>
                 <td>
-                  {order.name} {order.email}
+                  {order.name} {order.lastname}
                   <br />
-                  {order.city} {order.postalCode} {order.country}
-                  <br />
-                  {order.streetAddress}
+                  {order.email}
                 </td>
                 <td>
                   {order.line_items.map((l) => (
                     <>
-                      {l.price_data?.tour_data?.name || "Tour sin registrar "}x
-                      {l.quantity}
+                      <td>
+                        {l.price_data?.tour_data?.name || "Tour sin registrar "}
+                      </td>
+                      <td>{l.quantity}</td>
                       <br />
                     </>
                   ))}
