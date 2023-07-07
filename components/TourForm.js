@@ -180,6 +180,12 @@ export default function TourForm({
         value={subtitle}
         onChange={(ev) => setSubtitle(ev.target.value)}
       />
+      <label>Descripción</label>
+      <textarea
+        placeholder="description"
+        value={description}
+        onChange={(ev) => setDescription(ev.target.value)}
+      />
       {/* <label>Categoría</label>
       <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
         <option value="">Sin categoría</option>
@@ -413,12 +419,6 @@ export default function TourForm({
         <div></div>
       )}
 
-      <label>Descripción</label>
-      <textarea
-        placeholder="description"
-        value={description}
-        onChange={(ev) => setDescription(ev.target.value)}
-      />
       <label>Precio del tour (en USD)</label>
       <input
         type="number"
