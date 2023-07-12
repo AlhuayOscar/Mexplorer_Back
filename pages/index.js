@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import { useSession } from "next-auth/react";
 import GridLoader from "react-spinners/GridLoader";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { chartColors } from "./api/graphSettings.js";
 import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 
@@ -72,28 +73,8 @@ export default function Home() {
     datasets: [
       {
         data: [reservedToursCount, unreservedToursCount],
-        backgroundColor: [
-          "#36a2eb",
-          "#ff6384",
-          "#ffce56",
-          "#ff9f40",
-          "#4bc0c0",
-          "#8e44ad",
-          "#f39c12",
-          "#16a085",
-          "#c0392b",
-        ],
-        borderColor: [
-          "#36a2eb",
-          "#ff6384",
-          "#ffce56",
-          "#ff9f40",
-          "#4bc0c0",
-          "#8e44ad",
-          "#f39c12",
-          "#16a085",
-          "#c0392b",
-        ],
+        backgroundColor: chartColors.slice(0, 2),
+        borderColor: chartColors.slice(0, 2),
         borderWidth: 1,
       },
     ],
@@ -108,28 +89,8 @@ export default function Home() {
         data: uniquePrices.map((price) => {
           return tourData.filter((tour) => tour.price === price).length;
         }),
-        backgroundColor: [
-          "#ffce56",
-          "#ff6384",
-          "#36a2eb",
-          "#ff9f40",
-          "#4bc0c0",
-          "#8e44ad",
-          "#f39c12",
-          "#16a085",
-          "#c0392b",
-        ],
-        borderColor: [
-          "#ffce56",
-          "#ff6384",
-          "#36a2eb",
-          "#ff9f40",
-          "#4bc0c0",
-          "#8e44ad",
-          "#f39c12",
-          "#16a085",
-          "#c0392b",
-        ],
+        backgroundColor: chartColors.slice(2, 11),
+        borderColor: chartColors.slice(2, 11),
         borderWidth: 1,
       },
     ],
@@ -143,28 +104,8 @@ export default function Home() {
           tourData.filter((tour) => tour.promo).length,
           tourData.filter((tour) => !tour.promo).length,
         ],
-        backgroundColor: [
-          "#36a2eb",
-          "#ff6384",
-          "#ffce56",
-          "#ff9f40",
-          "#4bc0c0",
-          "#8e44ad",
-          "#f39c12",
-          "#16a085",
-          "#c0392b",
-        ],
-        borderColor: [
-          "#36a2eb",
-          "#ff6384",
-          "#ffce56",
-          "#ff9f40",
-          "#4bc0c0",
-          "#8e44ad",
-          "#f39c12",
-          "#16a085",
-          "#c0392b",
-        ],
+        backgroundColor: chartColors.slice(0, 2),
+        borderColor: chartColors.slice(0, 2),
         borderWidth: 1,
       },
     ],
