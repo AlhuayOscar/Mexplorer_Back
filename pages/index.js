@@ -38,7 +38,7 @@ export default function Home() {
   const [unreservedToursCount, setUnreservedToursCount] = useState(0);
   const [recentTours, setRecentTours] = useState([]);
   const [productNames, setProductNames] = useState([]); // Estado para almacenar el array de nombres
-
+  const [valuesByMonth, setValuesByMonth] = useState([]);
   useEffect(() => {
     if (session) {
       axios
@@ -71,7 +71,7 @@ export default function Home() {
             const productName =
               response.data[index].line_items[0].price_data.product_data.name;
             names.push(productName); // Agregar el nombre al array temporal
-            console.log(productName);
+
             // Incrementar la cuenta del nombre en el objeto nameCounts
             if (nameCounts[productName]) {
               nameCounts[productName] += 1;
@@ -91,7 +91,6 @@ export default function Home() {
             mostFrequentName = name;
           }
         }
-        console.log("Nombre que aparece más veces:", mostFrequentName);
         let modifiedName = mostFrequentName.replace(
           /(t[o0]+u[r0]+|Tour\s*[aA]\s*)/g,
           ""
@@ -105,8 +104,66 @@ export default function Home() {
         console.error("Acá la erraste pibe:", error);
       });
   }, []);
+  useEffect(() => {
+    axios
+      .get("/api/orders")
+      .then((response) => {
+        const valueMonths = [];
+        const ordersMonth = [];
 
-  console.log(productNames[0]);
+        for (let index = 0; index < response.data.length; index++) {
+          if (
+            response.data[index].line_items &&
+            response.data[index].line_items[0] &&
+            response.data[index].line_items[0].price_data &&
+            response.data[index].line_items[0].price_data.unit_amount &&
+            response.data[index].createdAt
+          ) {
+            const unitAmountString =
+              response.data[index].line_items[0].price_data.unit_amount;
+            const unitAmount = Number(unitAmountString);
+            const createdAt = response.data[index].createdAt;
+            const month = new Date(createdAt).getMonth(); // Obtener el mes (0-11)
+
+            if (valueMonths[month]) {
+              valueMonths[month] += unitAmount;
+            } else {
+              valueMonths[month] = unitAmount;
+            }
+
+            if (ordersMonth[month]) {
+              ordersMonth[month] += 1;
+            } else {
+              ordersMonth[month] = 1;
+            }
+          }
+        }
+
+        // Formatear valueMonths agregando una coma antes de los dos últimos caracteres
+        const formattedValueMonths = valueMonths.map((value) => {
+          const formattedValue = value.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+          });
+          return formattedValue;
+        });
+
+        // Eliminar los espacios vacíos en los arreglos
+        const filteredValueMonths = formattedValueMonths.filter(
+          (value) => value !== undefined
+        );
+        const filteredOrdersMonth = ordersMonth.filter(
+          (value) => value !== undefined
+        );
+
+        // Imprimir los arreglos de suma total y cantidad total de órdenes por mes
+        console.log("valueMonths:", filteredValueMonths);
+        console.log("ordersMonth:", filteredOrdersMonth);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
   useEffect(() => {
     if (!isLoading && tourData.length > 0) {
       const reservedCount = tourData.filter((tour) => tour.reservation).length;
@@ -235,9 +292,9 @@ export default function Home() {
       {
         type: "bar",
         //Acá va el arreglo de productNames
-        label: productNames,
+        label: productNames, //Listo
         backgroundColor: "rgb(75, 192, 192, 0.5)",
-        data: [200, 400, 700, 500, 300, 100, 800],
+        data: [200, 400, 700, 500, 300, 100, 800], //
         borderColor: "white",
         borderWidth: 2,
       },
