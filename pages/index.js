@@ -37,7 +37,8 @@ export default function Home() {
   const [reservedToursCount, setReservedToursCount] = useState(0);
   const [unreservedToursCount, setUnreservedToursCount] = useState(0);
   const [recentTours, setRecentTours] = useState([]);
-
+  const [productNames, setProductNames] = useState([]); // Estado para almacenar el array de nombres
+  const [bestTour, setBestTour] = useState(null);
   useEffect(() => {
     if (session) {
       axios
@@ -51,12 +52,68 @@ export default function Home() {
         });
     }
   }, [session]);
+  useEffect(() => {
+    axios
+      .get("/api/orders")
+      .then((response) => {
+        const tourFrequency = {};
 
+        for (let index = 0; index < response.data.length; index++) {
+          if (
+            response.data[index].line_items &&
+            response.data[index].line_items[0] &&
+            response.data[index].line_items[0].price_data &&
+            response.data[index].line_items[0].price_data.product_data &&
+            response.data[index].line_items[0].price_data.product_data.name
+          ) {
+            const productName =
+              response.data[index].line_items[0].price_data.product_data.name;
+
+            if (tourFrequency[productName]) {
+              tourFrequency[productName]++;
+            } else {
+              tourFrequency[productName] = 1;
+            }
+          }
+        }
+
+        let maxFrequency = 0;
+        let bestTourName = null;
+
+        for (const productName in tourFrequency) {
+          if (tourFrequency.hasOwnProperty(productName)) {
+            const frequency = tourFrequency[productName];
+            if (frequency > maxFrequency) {
+              maxFrequency = frequency;
+              bestTourName = productName;
+            }
+          }
+        }
+
+        if (bestTourName !== null) {
+          const bestTourData = response.data.find(
+            (item) =>
+              item.line_items[0].price_data.product_data.name ===
+                bestTourName &&
+              item.line_items &&
+              item.line_items[0] &&
+              item.line_items[0].price_data &&
+              item.line_items[0].price_data.product_data
+          );
+          setBestTour(bestTourData.line_items[0].price_data.product_data.name);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+  
+  console.log(bestTour);
   useEffect(() => {
     if (!isLoading && tourData.length > 0) {
       const reservedCount = tourData.filter((tour) => tour.reservation).length;
       const unreservedCount = tourData.filter(
-        (tour) => !tour.reservation 
+        (tour) => !tour.reservation
       ).length;
       setReservedToursCount(reservedCount);
       setUnreservedToursCount(unreservedCount);
@@ -69,15 +126,8 @@ export default function Home() {
     }
   }, [isLoading, tourData]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2100);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   if (isLoading || status === "loading") {
+    console.log(productNames);
     return (
       <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
         <img
@@ -95,7 +145,6 @@ export default function Home() {
       </div>
     );
   }
-
   const chartOptions = {
     responsive: true,
   };
@@ -180,7 +229,8 @@ export default function Home() {
       },
       {
         type: "bar",
-        label: "Tour B",
+        //Acá va el arreglo de productNames
+        label: bestTour,
         backgroundColor: "rgb(75, 192, 192, 0.5)",
         data: [200, 400, 700, 500, 300, 100, 800],
         borderColor: "white",
@@ -188,7 +238,6 @@ export default function Home() {
       },
     ],
   };
-
   return (
     <Layout>
       <div className="text-blue-900 flex justify-between">
@@ -236,7 +285,7 @@ export default function Home() {
           />
         </div>
         <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
-          <h3 className="text-center">Gráfico Multitipo</h3>
+          <h3 className="text-center">Tour más vendido</h3>
           <Line
             data={lineChartData}
             options={chartOptions}

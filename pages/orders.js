@@ -38,7 +38,7 @@ export default function OrdersPage() {
                   {order.email}
                 </td>
                 <td>
-                  {order.line_items.map((l) => (
+                  {order.line_items?.map((l) => (
                     <>
                       <td>
                         {l.price_data?.tour_data?.name || "Tour sin registrar "}
