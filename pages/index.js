@@ -114,21 +114,29 @@ export default function Home() {
         for (let index = 0; index < response.data.length; index++) {
           if (
             response.data[index].line_items &&
-            response.data[index].line_items[0] &&
-            response.data[index].line_items[0].price_data &&
-            response.data[index].line_items[0].price_data.unit_amount &&
             response.data[index].createdAt
           ) {
-            const unitAmountString =
-              response.data[index].line_items[0].price_data.unit_amount;
-            const unitAmount = Number(unitAmountString);
+            const lineItems = response.data[index].line_items;
             const createdAt = response.data[index].createdAt;
             const month = new Date(createdAt).getMonth(); // Obtener el mes (0-11)
 
+            let totalValue = 0;
+
+            for (let i = 0; i < lineItems.length; i++) {
+              if (
+                lineItems[i].price_data &&
+                lineItems[i].price_data.unit_amount
+              ) {
+                const unitAmountString = lineItems[i].price_data.unit_amount;
+                const unitAmount = Number(unitAmountString);
+                totalValue += unitAmount;
+              }
+            }
+
             if (valueMonths[month]) {
-              valueMonths[month] += unitAmount;
+              valueMonths[month] += totalValue;
             } else {
-              valueMonths[month] = unitAmount;
+              valueMonths[month] = totalValue;
             }
 
             if (ordersMonth[month]) {
@@ -141,9 +149,7 @@ export default function Home() {
 
         // Formatear valueMonths agregando una coma antes de los dos últimos caracteres
         const formattedValueMonths = valueMonths.map((value) => {
-          const formattedValue = value.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-          });
+          const formattedValue = (value / 100).toFixed(2).replace(".", ",");
           return formattedValue;
         });
 
