@@ -39,6 +39,8 @@ export default function Home() {
   const [recentTours, setRecentTours] = useState([]);
   const [productNames, setProductNames] = useState([]); // Estado para almacenar el array de nombres
   const [valuesByMonth, setValuesByMonth] = useState([]);
+  const [filteredValueMonths, setFilteredValueMonths] = useState([]);
+  const [filteredOrdersMonth, setFilteredOrdersMonth] = useState([]);
   useEffect(() => {
     if (session) {
       axios
@@ -108,8 +110,8 @@ export default function Home() {
     axios
       .get("/api/orders")
       .then((response) => {
-        const valueMonths = [];
-        const ordersMonth = [];
+         const valueMonths = new Array(12).fill(0);
+         const ordersMonth = new Array(12).fill(0);
 
         for (let index = 0; index < response.data.length; index++) {
           if (
@@ -160,7 +162,8 @@ export default function Home() {
         const filteredOrdersMonth = ordersMonth.filter(
           (value) => value !== undefined
         );
-
+        setFilteredValueMonths(filteredValueMonths);
+        setFilteredOrdersMonth(filteredOrdersMonth);
         // Imprimir los arreglos de suma total y cantidad total de órdenes por mes
         console.log("valueMonths:", filteredValueMonths);
         console.log("ordersMonth:", filteredOrdersMonth);
@@ -169,7 +172,7 @@ export default function Home() {
         console.error("Error:", error);
       });
   }, []);
-
+  // Seguimos para los que no son graficos abajo:
   useEffect(() => {
     if (!isLoading && tourData.length > 0) {
       const reservedCount = tourData.filter((tour) => tour.reservation).length;
@@ -195,6 +198,40 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  const lineChartData = {
+    labels: [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ],
+    datasets: [
+      {
+        type: "line",
+        label: "Ventas",
+        borderColor: "rgb(255, 99, 132, 0.5)",
+        borderWidth: 2,
+        fill: false,
+        data: filteredOrdersMonth,
+      },
+      {
+        type: "bar",
+        label: productNames,
+        backgroundColor: "rgb(75, 192, 192, 0.5)",
+        data: filteredOrdersMonth,
+        borderColor: "white",
+        borderWidth: 2,
+      },
+    ],
+  };
   if (isLoading || status === "loading") {
     return (
       <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
@@ -213,9 +250,6 @@ export default function Home() {
       </div>
     );
   }
-  const chartOptions = {
-    responsive: true,
-  };
 
   const tourCountData = {
     labels: ["Con reserva", "Sin reserva"],
@@ -270,43 +304,9 @@ export default function Home() {
       },
     ],
   };
-
-  const lineChartData = {
-    labels: [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ],
-    datasets: [
-      {
-        type: "line",
-        label: "Ventas",
-        borderColor: "rgb(255, 99, 132, 0.5)",
-        borderWidth: 2,
-        fill: false,
-        data: [300, 500, 100, 200, 400, 600, 900],
-      },
-      {
-        type: "bar",
-        //Acá va el arreglo de productNames
-        label: productNames, //Listo
-        backgroundColor: "rgb(75, 192, 192, 0.5)",
-        data: [200, 400, 700, 500, 300, 100, 800], //
-        borderColor: "white",
-        borderWidth: 2,
-      },
-    ],
+  const chartOptions = {
+    responsive: true,
   };
-
   return (
     <Layout>
       <div className="text-blue-900 flex justify-between">
@@ -353,14 +353,14 @@ export default function Home() {
             className="pixelated-chart"
           />
         </div>
-        <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
-          <h3 className="text-center">Tour más vendido</h3>
-          <Line
-            data={lineChartData}
-            options={chartOptions}
-            className="pixelated-chart"
-          />
-        </div>
+      </div>
+      <div className="max-w-[1400px] max-h-[1400px] shadow-md rounded-lg p-5">
+        <h3 className="text-center">Tour más vendido</h3>
+        <Line
+          data={lineChartData}
+          options={chartOptions}
+          className="pixelated-chart"
+        />
       </div>
     </Layout>
   );
