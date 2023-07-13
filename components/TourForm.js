@@ -40,19 +40,10 @@ export default function TourForm({
     existingPromoPrice || 0
   );
 
-  // const [category, setCategory] = useState(assignedCategory || "");
-  // const [tourProperties, setTourProperties] = useState(
-  //   assignedProperties || {}
-  // );
   const [goToTours, setGoToTours] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   // const [categories, setCategories] = useState([]);
   const router = useRouter();
-  // useEffect(() => {
-  //   axios.get("/api/categories").then((result) => {
-  //     setCategories(result.data);
-  //   });
-  // }, []);
   async function saveTour(ev) {
     ev.preventDefault();
     const data = {
@@ -103,31 +94,6 @@ export default function TourForm({
   function updateImagesOrder(images) {
     setImages(images);
   }
-  // function setTourProp(propName, value) {
-  //   setTourProperties((prev) => {
-  //     const newTourProps = { ...prev };
-  //     newTourProps[propName] = value;
-  //     return newTourProps;
-  //   });
-  // }
-  // function handleIncludes(e) {
-  //   const name = e.target.value;
-  //   setIncludes((prev) => [...prev, name]);
-  // }
-
-  // const propertiesToFill = [];
-  // if (categories.length > 0 && category) {
-  //   let catInfo = categories.find(({ _id }) => _id === category);
-  //   propertiesToFill.push(...catInfo.properties);
-  //   while (catInfo?.parent?._id) {
-  //     const parentCat = categories.find(
-  //       ({ _id }) => _id === catInfo?.parent?._id
-  //     );
-  //     propertiesToFill.push(...parentCat.properties);
-  //     catInfo = parentCat;
-  //   }
-  //   console.log(propertiesToFill, "propertiesToFill");
-  // }
 
   function addIncludes() {
     setIncludes((prev) => [...prev, ""]);
@@ -153,11 +119,11 @@ export default function TourForm({
     });
   }
 
-  function addNotes() {
+  function addNote() {
     setNotes((prev) => [...prev, ""]);
   }
 
-  function removeNotas(indexToRemove) {
+  function removeNote(indexToRemove) {
     setNotes((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
@@ -357,7 +323,7 @@ export default function TourForm({
 
       <div className="mb-2">
         <label>Notas</label>
-        <button onClick={addNotes} type="button">
+        <button onClick={addNote} type="button">
           Añadir
         </button>
         {notes.length > 0 &&
