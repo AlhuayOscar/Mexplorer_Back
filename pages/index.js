@@ -73,7 +73,6 @@ export default function Home() {
             const productName =
               response.data[index].line_items[0].price_data.product_data.name;
             names.push(productName); // Agregar el nombre al array temporal
-
             // Incrementar la cuenta del nombre en el objeto nameCounts
             if (nameCounts[productName]) {
               nameCounts[productName] += 1;
@@ -110,8 +109,8 @@ export default function Home() {
     axios
       .get("/api/orders")
       .then((response) => {
-         const valueMonths = new Array(12).fill(0);
-         const ordersMonth = new Array(12).fill(0);
+        const valueMonths = [];
+        const ordersMonth = new Array(12).fill(null);
 
         for (let index = 0; index < response.data.length; index++) {
           if (
@@ -220,7 +219,7 @@ export default function Home() {
         borderColor: "rgb(255, 99, 132, 0.5)",
         borderWidth: 2,
         fill: false,
-        data: filteredOrdersMonth,
+        data: filteredOrdersMonth, //Acá
       },
       {
         type: "bar",
