@@ -38,7 +38,7 @@ export default function Home() {
   const [unreservedToursCount, setUnreservedToursCount] = useState(0);
   const [recentTours, setRecentTours] = useState([]);
   const [productNames, setProductNames] = useState([]); // Estado para almacenar el array de nombres
-  const [bestTour, setBestTour] = useState(null);
+
   useEffect(() => {
     if (session) {
       axios
@@ -56,7 +56,9 @@ export default function Home() {
     axios
       .get("/api/orders")
       .then((response) => {
-        const tourFrequency = {};
+        let count = 0;
+        const names = []; // Array temporal para almacenar los nombres
+        const nameCounts = {}; // Objeto para almacenar la cuenta de cada nombre
 
         for (let index = 0; index < response.data.length; index++) {
           if (
@@ -68,47 +70,43 @@ export default function Home() {
           ) {
             const productName =
               response.data[index].line_items[0].price_data.product_data.name;
-
-            if (tourFrequency[productName]) {
-              tourFrequency[productName]++;
+            names.push(productName); // Agregar el nombre al array temporal
+            console.log(productName);
+            // Incrementar la cuenta del nombre en el objeto nameCounts
+            if (nameCounts[productName]) {
+              nameCounts[productName] += 1;
             } else {
-              tourFrequency[productName] = 1;
+              nameCounts[productName] = 1;
             }
+
+            count++;
           }
         }
-
-        let maxFrequency = 0;
-        let bestTourName = null;
-
-        for (const productName in tourFrequency) {
-          if (tourFrequency.hasOwnProperty(productName)) {
-            const frequency = tourFrequency[productName];
-            if (frequency > maxFrequency) {
-              maxFrequency = frequency;
-              bestTourName = productName;
-            }
+        // Encontrar el nombre que aparece más veces
+        let maxCount = 0;
+        let mostFrequentName = "";
+        for (const name in nameCounts) {
+          if (nameCounts[name] > maxCount) {
+            maxCount = nameCounts[name];
+            mostFrequentName = name;
           }
         }
-
-        if (bestTourName !== null) {
-          const bestTourData = response.data.find(
-            (item) =>
-              item.line_items[0].price_data.product_data.name ===
-                bestTourName &&
-              item.line_items &&
-              item.line_items[0] &&
-              item.line_items[0].price_data &&
-              item.line_items[0].price_data.product_data
-          );
-          setBestTour(bestTourData.line_items[0].price_data.product_data.name);
-        }
+        console.log("Nombre que aparece más veces:", mostFrequentName);
+        let modifiedName = mostFrequentName.replace(
+          /(t[o0]+u[r0]+|Tour\s*[aA]\s*)/g,
+          ""
+        ); // Eliminar "tour" y variantes, así como la letra "a" después de "tour" (con o sin espacios)
+        modifiedName = modifiedName.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) =>
+          match.toUpperCase()
+        ); // Capitalizar la primera letra de cada palabra
+        setProductNames([modifiedName.trim()]); // Actualizar el estado con el nombre modificado y eliminar espacios en blanco
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("Acá la erraste pibe:", error);
       });
   }, []);
-  
-  console.log(bestTour);
+
+  console.log(productNames[0]);
   useEffect(() => {
     if (!isLoading && tourData.length > 0) {
       const reservedCount = tourData.filter((tour) => tour.reservation).length;
@@ -126,8 +124,15 @@ export default function Home() {
     }
   }, [isLoading, tourData]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   if (isLoading || status === "loading") {
-    console.log(productNames);
     return (
       <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
         <img
@@ -230,7 +235,7 @@ export default function Home() {
       {
         type: "bar",
         //Acá va el arreglo de productNames
-        label: bestTour,
+        label: productNames,
         backgroundColor: "rgb(75, 192, 192, 0.5)",
         data: [200, 400, 700, 500, 300, 100, 800],
         borderColor: "white",
@@ -238,6 +243,7 @@ export default function Home() {
       },
     ],
   };
+
   return (
     <Layout>
       <div className="text-blue-900 flex justify-between">
