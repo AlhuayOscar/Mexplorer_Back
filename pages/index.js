@@ -262,7 +262,7 @@ export default function Home() {
     ],
   };
 
-  const uniquePrices = [...new Set(tourData.map((tour) => tour.price))];
+  const uniquePrices = [...new Set(tourData.map((tour) => tour.adultsPrice))];
 
   const tourPricesData = {
     labels: uniquePrices.map((price) => price.toString()),

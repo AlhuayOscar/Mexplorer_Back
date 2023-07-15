@@ -21,12 +21,16 @@ export default async function handle(req, res) {
       subtitle,
       description,
       duration,
-      price,
+      adultsPrice,
+      childrenPrice,
       reservation,
-      reservationPrice,
+      adultsReservationPrice,
+      childrenReservationPrice,
       images,
       includes,
       requirements,
+      currency,
+      doesntIncludes,
       review,
       notes,
       promo,
@@ -37,12 +41,16 @@ export default async function handle(req, res) {
       subtitle,
       description,
       duration,
-      price,
+      adultsPrice,
+      childrenPrice,
       reservation,
-      reservationPrice,
+      adultsReservationPrice,
+      childrenReservationPrice,
       images,
       includes,
       requirements,
+      currency,
+      doesntIncludes,
       review,
       notes,
       promo,
@@ -57,15 +65,19 @@ export default async function handle(req, res) {
       subtitle,
       description,
       duration,
-      price,
+      adultsPrice,
+      childrenPrice,
       reservation,
-      reservationPrice,
+      adultsReservationPrice,
+      childrenReservationPrice,
       images,
       includes,
       requirements,
       review,
+      doesntIncludes,
       notes,
       promo,
+      currency,
       withoutPromoPrice,
       _id,
     } = req.body;
@@ -76,24 +88,28 @@ export default async function handle(req, res) {
         subtitle,
         description,
         duration,
-        price,
+        adultsPrice,
+        childrenPrice,
         reservation,
-        reservationPrice,
+        adultsReservationPrice,
+        childrenReservationPrice,
         images,
         includes,
+        doesntIncludes,
         requirements,
         review,
         notes,
         promo,
+        currency,
         withoutPromoPrice,
       }
     );
     res.json(true);
   }
 
-  if (method === 'DELETE') {
+  if (method === "DELETE") {
     if (req.query?._id) {
-      await Tour.deleteOne({_id:req.query?._id});
+      await Tour.deleteOne({ _id: req.query?._id });
       res.json(true);
     }
   }
