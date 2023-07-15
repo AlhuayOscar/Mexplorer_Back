@@ -354,7 +354,7 @@ export default function Home() {
         </div>
       </div>
       <div className="max-w-[1400px] max-h-[1400px] shadow-md rounded-lg p-5">
-        <h3 className="text-center">Tour más vendido</h3>
+        <h3 className="text-center">Tour con más ventas</h3>
         <Line
           data={lineChartData}
           options={chartOptions}
