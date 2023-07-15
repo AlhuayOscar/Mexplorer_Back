@@ -269,7 +269,7 @@ export default function Home() {
     datasets: [
       {
         data: uniquePrices.map((price) => {
-          return tourData.filter((tour) => tour.price === price).length;
+          return tourData.filter((tour) => tour.adultsPrice === price).length;
         }),
         backgroundColor: backgroundColors.slice(2, 11),
         borderColor: chartColors.slice(2, 11),
