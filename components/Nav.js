@@ -116,6 +116,21 @@ function Nav({ show, swal }) {
           <ReceiptLongIcon />
           Ordenes
         </Link>
+        <Link
+          href={"/reservation"}
+          className={`${
+            pathname.includes("/reservation") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
+          onMouseEnter={(e) => {
+            e.target.classList.add("scale-110");
+          }}
+          onMouseLeave={(e) => {
+            e.target.classList.remove("scale-110");
+          }}
+        >
+          <ReceiptLongIcon />
+          Reservas
+        </Link>
         <button
           onClick={logout}
           className={`${inactiveLink} transform transition-transform duration-300`}

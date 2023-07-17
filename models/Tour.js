@@ -5,11 +5,15 @@ const TourSchema = new Schema({
   subtitle: { type: String },
   description: { type: String },
   duration: { type: Number, required: true },
-  price: { type: Number, required: true },
+  childrenPrice: { type: Number, required: true },
+  adultsPrice: { type: Number, required: true },
   reservation: { type: Boolean, required: true },
-  reservationPrice: { type: Number },
+  childrenReservationPrice: { type: Number },
+  adultsReservationPrice: { type: Number },
   images: { type: [String] },
   includes: { type: [String] },
+  doesntIncludes: { type: [String] },
+  currency: { type: String },
   requirements: { type: [String] },
   review: { type: [String] },
   notes: { type: [String] },
@@ -17,6 +21,5 @@ const TourSchema = new Schema({
   withoutPromoPrice: { type: Number },
   createdAt: { type: Date, default: Date.now },
 });
-
 
 export const Tour = models?.Tour || model("Tour", TourSchema);

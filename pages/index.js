@@ -262,14 +262,15 @@ export default function Home() {
     ],
   };
 
-  const uniquePrices = [...new Set(tourData.map((tour) => tour.price))];
+  const uniquePrices = [...new Set(tourData.map((tour) => tour.adultsPrice))];
 
   const tourPricesData = {
-    labels: uniquePrices.map((price) => price.toString()),
+    labels: uniquePrices.map((adultsPrice) => adultsPrice?.toString()),
     datasets: [
       {
-        data: uniquePrices.map((price) => {
-          return tourData.filter((tour) => tour.price === price).length;
+        data: uniquePrices.map((adultsPrice) => {
+          return tourData.filter((tour) => tour.adultsPrice === adultsPrice)
+            .length;
         }),
         backgroundColor: backgroundColors.slice(2, 11),
         borderColor: chartColors.slice(2, 11),
