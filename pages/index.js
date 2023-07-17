@@ -265,11 +265,12 @@ export default function Home() {
   const uniquePrices = [...new Set(tourData.map((tour) => tour.adultsPrice))];
 
   const tourPricesData = {
-    labels: uniquePrices.map((price) => price.toString()),
+    labels: uniquePrices.map((adultsPrice) => adultsPrice?.toString()),
     datasets: [
       {
-        data: uniquePrices.map((price) => {
-          return tourData.filter((tour) => tour.adultsPrice === price).length;
+        data: uniquePrices.map((adultsPrice) => {
+          return tourData.filter((tour) => tour.adultsPrice === adultsPrice)
+            .length;
         }),
         backgroundColor: backgroundColors.slice(2, 11),
         borderColor: chartColors.slice(2, 11),
@@ -354,7 +355,7 @@ export default function Home() {
         </div>
       </div>
       <div className="max-w-[1400px] max-h-[1400px] shadow-md rounded-lg p-5">
-        <h3 className="text-center">Tour más vendido</h3>
+        <h3 className="text-center">Tour con más ventas</h3>
         <Line
           data={lineChartData}
           options={chartOptions}
