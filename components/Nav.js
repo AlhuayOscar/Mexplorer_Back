@@ -6,6 +6,7 @@ import { withSwal } from "react-sweetalert2";
 import TourIcon from "@mui/icons-material/Tour";
 import BookIcon from "@mui/icons-material/Book";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
@@ -128,9 +129,24 @@ function Nav({ show, swal }) {
             e.target.classList.remove("scale-110");
           }}
         >
-          <ReceiptLongIcon />
+          <AutoStoriesIcon />
           Reservas
         </Link>
+        {/* <Link
+          href={"/settings"}
+          className={`${
+            pathname.includes("/settings") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
+          onMouseEnter={(e) => {
+            e.target.classList.add("scale-110");
+          }}
+          onMouseLeave={(e) => {
+            e.target.classList.remove("scale-110");
+          }}
+        >
+          <ReceiptLongIcon />
+          Configuraciones
+        </Link> */}
         <button
           onClick={logout}
           className={`${inactiveLink} transform transition-transform duration-300`}
