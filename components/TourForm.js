@@ -28,15 +28,15 @@ export default function TourForm({
   const [description, setDescription] = useState(existingDescription || "");
   const [duration, setDuration] = useState(existingDuration || 0);
   const [childrenPrice, setChildrenPrice] = useState(
-    existingChildrenPrice || 0
+    existingChildrenPrice || null
   );
-  const [adultsPrice, setAdultsPrice] = useState(existingAdultsPrice || 0);
+  const [adultsPrice, setAdultsPrice] = useState(existingAdultsPrice || null);
   const [reservation, setReservation] = useState(existingReservation || false);
   const [childrenReservationPrice, setChildrenReservationPrice] = useState(
-    existingChildrenReservationPrice || 0
+    existingChildrenReservationPrice || null
   );
   const [adultsReservationPrice, setAdultsReservationPrice] = useState(
-    existingAdultsReservationPrice || 0
+    existingAdultsReservationPrice || null
   );
   const [images, setImages] = useState(existingImages || []);
   const [includes, setIncludes] = useState(existingIncludes || []);
