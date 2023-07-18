@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "../components/Layout.js";
+import Swal from "sweetalert2";
 
 const Settings = () => {
   const [urlData, setUrlData] = useState([]);
@@ -51,43 +52,27 @@ const Settings = () => {
     fetchSettings();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Check if both URL and Nick inputs are empty
-    if (!newUrl.url.trim() && !newUrl.nick.trim()) {
-      setErrorMessage(
-        "Si quiere realizar un cambio, Por favor colocar una URL y un Nick, "
-      );
-      setTimeout(clearMessages, 3500); // Clear the error message after 4.5 seconds
-      return;
-    } else if (!newUrl.url.trim()) {
-      setErrorMessage("Por favor, colocar una URL.");
-      setTimeout(clearMessages, 3500); // Clear the error message after 4.5 seconds
-      return;
-    } else if (!newUrl.nick.trim()) {
-      setErrorMessage("Por favor, colocar un Nick.");
-      setTimeout(clearMessages, 3500); // Clear the error message after 4.5 seconds
-      return;
-    }
+  try {
+    await axios.post("/api/settings", {
+      videoUrls: urlData.map((data) => data.url),
+      urlName: urlData.map((data) => data.nick),
+    });
 
-    try {
-      await axios.post("/api/settings", {
-        videoUrls: urlData.map((data) => data.url),
-        urlName: urlData.map((data) => data.nick),
-      });
+    // If everything was successful, show the success message
+    setSuccessMessage("Peticion realizada!");
 
-      // If everything was successful, show the success message
-      setSuccessMessage("Objetos subidos!");
+    // Reset the button text to "Guardar cambios" after saving changes
+    setSaveButtonText("Guardar cambios");
 
-      // Reset the button text to "Guardar cambios" after saving changes
-      setSaveButtonText("Guardar cambios");
+    setTimeout(clearMessages, 3500); // Clear the success message after 2.5 seconds
+  } catch (error) {
+    // Error handling
+  }
+};
 
-      setTimeout(clearMessages, 2500); // Clear the success message after 4.5 seconds
-    } catch (error) {
-      // Error handling
-    }
-  };
 
   const handleNewUrlChange = (e) => {
     setNewUrl({ ...newUrl, url: e.target.value });
@@ -97,24 +82,45 @@ const Settings = () => {
     setNewUrl({ ...newUrl, nick: e.target.value });
   };
 
- const handleAddNewUrl = () => {
-   // Check if both URL and Nick inputs are empty or have only spaces
-   if (!newUrl.url.trim() || !newUrl.nick.trim()) {
-     setErrorMessage("Por favor, colocar una URL y un Nombre válidos.");
-     setTimeout(clearMessages, 2500); // Clear the error message after 4.5 seconds
-     return;
-   }
+  const handleAddNewUrl = () => {
+    // Check if both URL and Nick inputs are empty or have only spaces
+    if (!newUrl.url.trim() || !newUrl.nick.trim()) {
+      setErrorMessage("Por favor, colocar una URL y un Nombre válidos.");
+      setTimeout(clearMessages, 3500); // Clear the error message after 4.5 seconds
+      return;
+    }
 
-   setUrlData([...urlData, { ...newUrl }]);
-   setNewUrl({ url: "", nick: "" });
-   setErrorMessage(""); // Clear any previous error message when adding a new URL
- };
-
-  const handleDelete = (index) => {
-    const newData = [...urlData];
-    newData.splice(index, 1);
-    setUrlData(newData);
+    setUrlData([...urlData, { ...newUrl }]);
+    setNewUrl({ url: "", nick: "" });
+    setErrorMessage(""); // Clear any previous error message when adding a new URL
   };
+
+const handleDelete = (index) => {
+  // Show the SweetAlert confirmation dialog
+  Swal.fire({
+    title: "¿Realmente quiere eliminarlo?",
+    text: "Esta acción no se puede deshacer.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, eliminalo",
+    cancelButtonText: "Mejor no",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // If the user confirms the deletion, remove the item
+      setUrlData((prevUrlData) => {
+        const newData = [...prevUrlData];
+        newData.splice(index, 1);
+        return newData;
+      });
+
+      // Submit the form after deleting the item
+      handleSubmit(new Event("submit"));
+    }
+  });
+};
+
 
   // Update the button text based on the state of URL data and inputs
   useEffect(() => {
@@ -136,7 +142,7 @@ const Settings = () => {
   return (
     <Layout>
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Editar configuraciones</h1>
+        <h1 className="text-3xl font-bold mb-4">Editar configuraciones</h1>
         {errorMessage && (
           <div className="bg-red-200 border-l-4 border-red-500 text-red-700 p-4 mb-4">
             {errorMessage}
@@ -148,50 +154,71 @@ const Settings = () => {
           </div>
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block">URLs:</label>
-            <table>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Nombre</th>
-                  <th>URL</th>
-                  <th>Eliminar</th> {/* New table header for delete button */}
+                  <th className="px-2 py-2">Eliminar</th>
+                  <th className="px-4 py-2">#</th>
+                  <th className="px-4 py-2">Nombre</th>
+                  <th className="px-4 py-2">URL</th>
                 </tr>
               </thead>
               <tbody>
                 {urlData.map((data, index) => (
-                  <tr key={index}>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(index)} // Call handleDelete with the index
-                      className="text-red-500 font-bold"
+                  <tr
+                    key={index}
+                    className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                  >
+                    <td className="border px-4 py-2">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(index)}
+                        className="text-red-500 font-bold"
+                      >
+                        X
+                      </button>
+                    </td>
+                    <td className="border px-4 py-2">{index + 1}</td>
+                    <td
+                      className="border px-4 py-2"
+                      style={getCompanyStyle(data.nick)}
                     >
-                      X
-                    </button>
-                    <td>{index + 1}</td>
-                    <td style={getCompanyStyle(data.nick)}>{data.nick}</td>
-                    <td>{data.url}</td>
-                    <td></td>
+                      {data.nick}
+                    </td>
+                    <td className="border px-4 py-2 max-w-[100px]">
+                      <div
+                        className="overflow-hidden whitespace-nowrap"
+                        style={{
+                          textOverflow: "ellipsis",
+                          WebkitLineClamp: 1, // Agrega esta línea para soporte en navegadores basados en WebKit (por ejemplo, Safari)
+                          display: "-webkit-box", // Agrega esta línea para soporte en navegadores basados en WebKit (por ejemplo, Safari)
+                          WebkitBoxOrient: "vertical", // Agrega esta línea para soporte en navegadores basados en WebKit (por ejemplo, Safari)
+                        }}
+                      >
+                        {data.url}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <input
-              type="text"
-              value={newUrl.url}
-              onChange={handleNewUrlChange}
-              placeholder="Coloca la URL aquí"
-              className="border border-gray-300 px-2 py-1 w-full rounded"
-            />
-            <input
-              type="text"
-              value={newUrl.nick}
-              onChange={handleNewNickChange}
-              placeholder="Nombre de la URL"
-              className="border border-gray-300 px-2 py-1 w-full rounded"
-            />
           </div>
+
+          <input
+            type="text"
+            value={newUrl.url}
+            onChange={handleNewUrlChange}
+            placeholder="Coloca la URL aquí"
+            className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
+          />
+          <input
+            type="text"
+            value={newUrl.nick}
+            onChange={handleNewNickChange}
+            placeholder="Nombre de la URL"
+            className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
+          />
           <button
             type="button"
             onClick={handleAddNewUrl}
