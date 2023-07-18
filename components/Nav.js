@@ -132,7 +132,7 @@ function Nav({ show, swal }) {
           <AutoStoriesIcon />
           Reservas
         </Link>
-        {/* <Link
+         <Link
           href={"/settings"}
           className={`${
             pathname.includes("/settings") ? activeLink : inactiveLink
@@ -146,7 +146,7 @@ function Nav({ show, swal }) {
         >
           <ReceiptLongIcon />
           Configuraciones
-        </Link> */}
+        </Link> 
         <button
           onClick={logout}
           className={`${inactiveLink} transform transition-transform duration-300`}
