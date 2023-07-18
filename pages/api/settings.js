@@ -1,41 +1,52 @@
 import { Settings } from "@/models/Settings";
 import { mongooseConnect } from "@/lib/mongoose";
-import { getServerSession } from "next-auth";
-import { authOptions, isAdminRequest } from "@/pages/api/auth/[...nextauth]";
 
-export default async function handle(req, res) {
-  const { method } = req;
-  await mongooseConnect();
-  await isAdminRequest(req, res);
+// Establece la conexión a MongoDB
+mongooseConnect();
 
-  if (method === "GET") {
-    const settingsDoc = await Settings.findOne();
-    res.json(settingsDoc);
-  }
+export default async function handler(req, res) {
+  if (req.method === "GET") {
+    try {
+      // Consulta la configuración (debe haber solo un documento en Settings)
+      const settings = await Settings.findOne({});
+      return res.status(200).json(settings);
+    } catch (error) {
+      return res.status(500).json({ error: "Error retrieving settings." });
+    }
+  } else if (req.method === "POST") {
+    try {
+      // Obtén los datos del formulario desde el cuerpo de la solicitud
+      const { videoUrls, redirectUrls } = req.body;
 
-  if (method === "POST") {
-    const { videoUrls, redirectUrls } = req.body;
-    const settingsDoc = await Settings.create({
-      videoUrls,
-      redirectUrls,
-    });
-    res.json(settingsDoc);
-  }
+      // Busca si ya existe la configuración en la base de datos
+      const existingSettings = await Settings.findOne({});
 
-  if (method === "PUT") {
-    const { videoUrls, redirectUrls } = req.body;
-    const settingsDoc = await Settings.updateOne(
-      {},
-      {
-        videoUrls,
-        redirectUrls,
+      if (existingSettings) {
+        // Si ya existe, actualiza los valores
+        existingSettings.videoUrls = videoUrls;
+        existingSettings.redirectUrls = redirectUrls;
+        await existingSettings.save();
+        return res.status(200).json(existingSettings);
+      } else {
+        // Si no existe, crea un nuevo documento de configuración
+        const newSettings = new Settings({ videoUrls, redirectUrls });
+        await newSettings.save();
+        return res.status(201).json(newSettings);
       }
-    );
-    res.json(settingsDoc);
-  }
-
-  if (method === "DELETE") {
-    await Settings.deleteMany();
-    res.json("ok");
+    } catch (error) {
+      return res.status(500).json({ error: "Error updating settings." });
+    }
+  } else if (req.method === "DELETE") {
+    try {
+      // Elimina la configuración (debe haber solo un documento en Settings)
+      await Settings.deleteMany({});
+      return res
+        .status(200)
+        .json({ message: "Settings deleted successfully." });
+    } catch (error) {
+      return res.status(500).json({ error: "Error deleting settings." });
+    }
+  } else {
+    return res.status(405).json({ error: "Method not allowed." });
   }
 }
