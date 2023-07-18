@@ -8,7 +8,7 @@ const Settings = () => {
   const [newUrl, setNewUrl] = useState({ url: "", nick: "" });
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [saveButtonText, setSaveButtonText] = useState("Guardar cambios");
+  const [saveButtonText, setSaveButtonText] = useState("Subir cambios");
 
   // Define the array of companies and their associated colors
   const companyColors = {
@@ -16,6 +16,9 @@ const Settings = () => {
     Instagram: { backgroundColor: "#e4405f", color: "#ffffff" },
     Trip: { backgroundColor: "#00af87", color: "#ffffff" }, // TripAdvisor
     Whatsapp: { backgroundColor: "#25d366", color: "#ffffff" },
+    Portada: { backgroundColor: "#AFC300", color: "#ffffff" },
+    Autos: { backgroundColor: "#AFC300", color: "#ffffff" },
+    Jetski: { backgroundColor: "#AFC300", color: "#ffffff" },
   };
 
   // Function to get the style object based on the company name
@@ -52,27 +55,26 @@ const Settings = () => {
     fetchSettings();
   }, []);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    await axios.post("/api/settings", {
-      videoUrls: urlData.map((data) => data.url),
-      urlName: urlData.map((data) => data.nick),
-    });
+    try {
+      await axios.post("/api/settings", {
+        videoUrls: urlData.map((data) => data.url),
+        urlName: urlData.map((data) => data.nick),
+      });
 
-    // If everything was successful, show the success message
-    setSuccessMessage("Peticion realizada!");
+      // If everything was successful, show the success message
+      setSuccessMessage("Peticion realizada!");
 
-    // Reset the button text to "Guardar cambios" after saving changes
-    setSaveButtonText("Guardar cambios");
+      // Reset the button text to "Subir Cambios" after saving changes
+      setSaveButtonText("Subir cambios");
 
-    setTimeout(clearMessages, 3500); // Clear the success message after 2.5 seconds
-  } catch (error) {
-    // Error handling
-  }
-};
-
+      setTimeout(clearMessages, 3500); // Clear the success message after 2.5 seconds
+    } catch (error) {
+      // Error handling
+    }
+  };
 
   const handleNewUrlChange = (e) => {
     setNewUrl({ ...newUrl, url: e.target.value });
@@ -95,46 +97,45 @@ const handleSubmit = async (e) => {
     setErrorMessage(""); // Clear any previous error message when adding a new URL
   };
 
-const handleDelete = (index) => {
-  // Show the SweetAlert confirmation dialog
-  Swal.fire({
-    title: "¿Realmente quiere eliminarlo?",
-    text: "Esta acción no se puede deshacer.",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Sí, eliminalo",
-    cancelButtonText: "Mejor no",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // If the user confirms the deletion, remove the item
-      setUrlData((prevUrlData) => {
-        const newData = [...prevUrlData];
-        newData.splice(index, 1);
-        return newData;
-      });
+  const handleDelete = (index) => {
+    // Show the SweetAlert confirmation dialog
+    Swal.fire({
+      title: "¿Realmente quiere eliminarlo?",
+      text: "Esta acción no se puede deshacer.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminalo",
+      cancelButtonText: "Mejor no",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If the user confirms the deletion, remove the item
+        setUrlData((prevUrlData) => {
+          const newData = [...prevUrlData];
+          newData.splice(index, 1);
+          return newData;
+        });
 
-      // Submit the form after deleting the item
-      handleSubmit(new Event("submit"));
-    }
-  });
-};
-
+        // Submit the form after deleting the item
+        handleSubmit(new Event("submit"));
+      }
+    });
+  };
 
   // Update the button text based on the state of URL data and inputs
   useEffect(() => {
     if (hasUrlsAndNick()) {
       setSaveButtonText("Mantener cambios");
     } else {
-      setSaveButtonText("Guardar Cambios");
+      setSaveButtonText("Subir cambios");
     }
   }, [urlData, newUrl]);
 
   // Update the button text when the user types in the inputs
   useEffect(() => {
     if (newUrl.url.trim() || newUrl.nick.trim()) {
-      setSaveButtonText("Guardar Cambios");
+      setSaveButtonText("Subir cambios");
     } else {
       setSaveButtonText("Mantener cambios");
     }
