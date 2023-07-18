@@ -6,6 +6,7 @@ const Settings = () => {
   const [urlData, setUrlData] = useState([]);
   const [newUrl, setNewUrl] = useState({ url: "", nick: "" });
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchSettings = async () => {
     try {
@@ -28,6 +29,19 @@ const Settings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if both URL and Nick inputs are empty
+    if (!newUrl.url.trim() && !newUrl.nick.trim()) {
+      setErrorMessage("Por favor, colocar una URL y un Nick.");
+      return;
+    } else if (!newUrl.url.trim()) {
+      setErrorMessage("Por favor, colocar una URL.");
+      return;
+    } else if (!newUrl.nick.trim()) {
+      setErrorMessage("Por favor, colocar un Nick.");
+      return;
+    }
+
     try {
       await axios.post("/api/settings", {
         videoUrls: urlData.map((data) => data.url),
@@ -50,14 +64,26 @@ const Settings = () => {
   };
 
   const handleAddNewUrl = () => {
+    // Check if both URL and Nick inputs are empty or have only spaces
+    if (!newUrl.url.trim() || !newUrl.nick.trim()) {
+      setErrorMessage("Por favor, colocar una URL y un Nombre válidos.");
+      return;
+    }
+
     setUrlData([...urlData, { ...newUrl }]);
     setNewUrl({ url: "", nick: "" });
+    setErrorMessage(""); // Clear any previous error message when adding a new URL
   };
 
   return (
     <Layout>
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Editar configuraciones</h1>
+        {errorMessage && (
+          <div className="bg-red-200 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+            {errorMessage}
+          </div>
+        )}
         {successMessage && (
           <div className="bg-green-200 border-l-4 border-green-500 text-green-700 p-4 mb-4">
             {successMessage}
@@ -70,16 +96,17 @@ const Settings = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>URL</th>
                   <th>Nombre</th>
+                  <th>URL</th>
                 </tr>
               </thead>
               <tbody>
                 {urlData.map((data, index) => (
                   <tr key={index}>
+                    
                     <td>{index + 1}</td>
-                    <td>{data.url}</td>
                     <td>{data.nick}</td>
+                    <td>{data.url}</td>
                   </tr>
                 ))}
               </tbody>
@@ -88,14 +115,14 @@ const Settings = () => {
               type="text"
               value={newUrl.url}
               onChange={handleNewUrlChange}
-              placeholder="Nueva URL"
+              placeholder="Coloca la URL aquí"
               className="border border-gray-300 px-2 py-1 w-full rounded"
             />
             <input
               type="text"
               value={newUrl.nick}
               onChange={handleNewNickChange}
-              placeholder="Nick"
+              placeholder="Nombre de la URL"
               className="border border-gray-300 px-2 py-1 w-full rounded"
             />
           </div>
