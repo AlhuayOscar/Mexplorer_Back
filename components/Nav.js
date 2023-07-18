@@ -7,7 +7,7 @@ import TourIcon from "@mui/icons-material/Tour";
 import BookIcon from "@mui/icons-material/Book";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-
+import LinkIcon from "@mui/icons-material/Link";
 function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-lg";
@@ -132,7 +132,7 @@ function Nav({ show, swal }) {
           <AutoStoriesIcon />
           Reservas
         </Link>
-         <Link
+        <Link
           href={"/settings"}
           className={`${
             pathname.includes("/settings") ? activeLink : inactiveLink
@@ -144,9 +144,9 @@ function Nav({ show, swal }) {
             e.target.classList.remove("scale-110");
           }}
         >
-          <ReceiptLongIcon />
-          Configuraciones
-        </Link> 
+          <LinkIcon />
+          Enlaces
+        </Link>
         <button
           onClick={logout}
           className={`${inactiveLink} transform transition-transform duration-300`}

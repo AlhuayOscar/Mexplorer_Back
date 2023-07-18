@@ -142,7 +142,7 @@ const handleDelete = (index) => {
   return (
     <Layout>
       <div className="p-4">
-        <h1 className="text-3xl font-bold mb-4">Editar configuraciones</h1>
+        <h1 className="text-3xl font-bold mb-4">Editar enlaces</h1>
         {errorMessage && (
           <div className="bg-red-200 border-l-4 border-red-500 text-red-700 p-4 mb-4">
             {errorMessage}
