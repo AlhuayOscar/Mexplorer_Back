@@ -1,8 +1,8 @@
-// import { model, models, Schema } from "mongoose";
+import { model, models, Schema } from "mongoose";
 
-// const SettingsSchema = new Schema({
-//   videoUrls: { type: [String] },    
-//   redirectUrls: { type: [String] },
-// });
+const SettingsSchema = new Schema({
+  videoUrls: { type: [String] },    
+  redirectUrls: { type: [String] },
+});
 
-// export const Settings = models?.Settings || model("Settings", SettingsSchema);
+export const Settings = models?.Settings || model("Settings", SettingsSchema);
