@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   } else if (req.method === "POST") {
     try {
       // Obtén los datos del formulario desde el cuerpo de la solicitud
-      const { videoUrls, redirectUrls } = req.body;
+      const { videoUrls, urlName } = req.body;
 
       // Busca si ya existe la configuración en la base de datos
       const existingSettings = await Settings.findOne({});
@@ -24,12 +24,12 @@ export default async function handler(req, res) {
       if (existingSettings) {
         // Si ya existe, actualiza los valores
         existingSettings.videoUrls = videoUrls;
-        existingSettings.redirectUrls = redirectUrls;
+        existingSettings.urlName = urlName;
         await existingSettings.save();
         return res.status(200).json(existingSettings);
       } else {
         // Si no existe, crea un nuevo documento de configuración
-        const newSettings = new Settings({ videoUrls, redirectUrls });
+        const newSettings = new Settings({ videoUrls, urlName });
         await newSettings.save();
         return res.status(201).json(newSettings);
       }
