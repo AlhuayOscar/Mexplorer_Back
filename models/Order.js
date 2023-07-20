@@ -2,13 +2,13 @@ import { model, models, Schema } from "mongoose";
 
 const OrderSchema = new Schema(
   {
+    kind: String,
     line_items: Object,
     name: String,
+    lastname: String,
+    date: String,
+    persons: Number,
     email: String,
-    city: String,
-    postalCode: String,
-    streetAddress: String,
-    country: String,
     paid: Boolean,
   },
   {
