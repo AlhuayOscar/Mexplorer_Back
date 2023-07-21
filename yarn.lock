@@ -7582,6 +7582,10 @@ sweetalert2@^11.3.5:
   version "11.7.3"
   resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.7.3.tgz"
   integrity sha512-fUN/fyVSBZNtY4Rr/Qtxn7tNNnlRAbUhQxTQ9uOo0xVMIHBmqq4/9pau5N9dB2pvkB353XL/ywRAycscLoYU3w==
+"sweetalert2@^11.3.5", "sweetalert2@^11.7.18":
+  "integrity" "sha512-Njl5JTDasSP8yRX9cpLdy2fdxHZYPYNmiIGNZykF2Zt1UHIvurwt/W2LmlGe5RbyMDHYDXuHqlD1Q8Vr5/mqlA=="
+  "resolved" "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.7.18.tgz"
+  "version" "11.7.18"
 
 synckit@^0.8.4:
   version "0.8.5"
