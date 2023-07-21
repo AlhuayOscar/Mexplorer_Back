@@ -328,7 +328,7 @@ export default function Home() {
           />
         </div>
         <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
-          <h3 className="text-center">Precios de Tours</h3>
+          <h3 className="text-center">Precios de Tours #EXPERIMENTAL#PORCAMBIAR</h3>
           <Doughnut
             data={tourPricesData}
             options={chartOptions}
