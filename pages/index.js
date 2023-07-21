@@ -262,14 +262,18 @@ export default function Home() {
     ],
   };
 
-  const uniquePrices = [...new Set(tourData.map((tour) => tour.price.usd.adultsPrice))];
+  const uniquePrices = [
+    ...new Set(tourData.map((tour) => tour.price.usd?.adultsPrice)),
+  ];
 
   const tourPricesData = {
     labels: uniquePrices.map((adultsPrice) => adultsPrice?.toString()),
     datasets: [
       {
         data: uniquePrices.map((adultsPrice) => {
-          return tourData.filter((tour) => tour.price && tour.price.usd.adultsPrice === adultsPrice).length;
+          return tourData.filter(
+            (tour) => tour.price && tour.price.usd?.adultsPrice === adultsPrice
+          ).length;
         }),
         backgroundColor: backgroundColors.slice(2, 11),
         borderColor: chartColors.slice(2, 11),
@@ -327,7 +331,7 @@ export default function Home() {
           />
         </div>
         <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
-          <h3 className="text-center">Precios de Tours</h3>
+          <h3 className="text-center">Precios de Tours #EXPERIMENTAL#PORCAMBIAR</h3>
           <Doughnut
             data={tourPricesData}
             options={chartOptions}
