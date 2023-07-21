@@ -9,54 +9,48 @@ export default async function handle(req, res) {
 
   if (method === "GET") {
     if (req.query?._id) {
-      res.json(await Tour.findOne({ _id: req.query._id }));
+      return res.json(await Tour.findOne({ _id: req.query._id }));
     } else {
-      res.json(await Tour.find());
+      return res.json(await Tour.find());
     }
   }
 
   if (method === "POST") {
-    const {
-      name,
-      subtitle,
-      description,
-      duration,
-      adultsPrice,
-      childrenPrice,
-      reservation,
-      adultsReservationPrice,
-      childrenReservationPrice,
-      images,
-      includes,
-      requirements,
-      currency,
-      doesntIncludes,
-      review,
-      notes,
-      promo,
-      withoutPromoPrice,
-    } = req.body;
-    const tourDoc = await Tour.create({
-      name,
-      subtitle,
-      description,
-      duration,
-      adultsPrice,
-      childrenPrice,
-      reservation,
-      adultsReservationPrice,
-      childrenReservationPrice,
-      images,
-      includes,
-      requirements,
-      currency,
-      doesntIncludes,
-      review,
-      notes,
-      promo,
-      withoutPromoPrice,
-    });
-    res.json(tourDoc);
+    try {
+      const {
+        name,
+        subtitle,
+        description,
+        duration,
+        price,
+        reservation,
+        images,
+        includes,
+        requirements,
+        doesntIncludes,
+        review,
+        notes,
+        promo,
+      } = req.body;
+      const tourDoc = await Tour.create({
+        name,
+        subtitle,
+        description,
+        duration,
+        price,
+        reservation,
+        images,
+        includes,
+        requirements,
+        doesntIncludes,
+        review,
+        notes,
+        promo,
+      });
+      return res.json(tourDoc);
+    } catch (error) {
+      return res.status(400).json({ msg: error });
+    }
   }
 
   if (method === "PUT") {
@@ -65,20 +59,15 @@ export default async function handle(req, res) {
       subtitle,
       description,
       duration,
-      adultsPrice,
-      childrenPrice,
+      price,
       reservation,
-      adultsReservationPrice,
-      childrenReservationPrice,
       images,
       includes,
       requirements,
-      review,
       doesntIncludes,
+      review,
       notes,
       promo,
-      currency,
-      withoutPromoPrice,
       _id,
     } = req.body;
     await Tour.updateOne(
@@ -88,11 +77,8 @@ export default async function handle(req, res) {
         subtitle,
         description,
         duration,
-        adultsPrice,
-        childrenPrice,
+        price,
         reservation,
-        adultsReservationPrice,
-        childrenReservationPrice,
         images,
         includes,
         doesntIncludes,
@@ -100,17 +86,15 @@ export default async function handle(req, res) {
         review,
         notes,
         promo,
-        currency,
-        withoutPromoPrice,
       }
     );
-    res.json(true);
+    return res.json(true);
   }
 
   if (method === "DELETE") {
     if (req.query?._id) {
       await Tour.deleteOne({ _id: req.query?._id });
-      res.json(true);
+      return res.json(true);
     }
   }
 }
