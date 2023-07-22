@@ -27,28 +27,30 @@ export default function OrdersPage() {
           {orders.length > 0 &&
             orders.map((order) => (
               <tr key={order._id}>
-                <td>{new Date(order.createdAt).toLocaleString()}</td>
-                <td>{order.kind}</td>
-                <td className={order.paid ? "text-green-600" : "text-red-600"}>
-                  {order.paid ? "YES" : "NO"}
-                </td>
-                <td>
-                  {order.name} {order.lastname}
-                  <br />
-                  {order.email}
-                </td>
-                <td>
-                  {order.line_items?.map((l) => (
-                    <>
-                      <td>
-                        {l.price_data?.tour_data?.name || "Tour sin registrar "}
-                      </td>
-                      <td>{l.quantity}</td>
-                      <br />
-                    </>
-                  ))}
-                </td>
-              </tr>
+              {order.kind === "Compra" ? <div>
+                  <td>{new Date(order.createdAt).toLocaleString()}</td>
+                  <td>{order.kind}</td>
+                  <td className={order.paid ? "text-green-600" : "text-red-600"}>
+                    {order.paid ? "YES" : "NO"}
+                  </td>
+                  <td>
+                    {order.name} {order.lastname}
+                    <br />
+                    {order.email}
+                  </td>
+                  <td>
+                    {order.line_items?.map((l) => (
+                      <>
+                        <td>
+                          {l.price_data?.product_data?.name || "Tour sin registrar "}
+                        </td>
+                        <td>{l.quantity}</td>
+                        <br />
+                      </>
+                    ))}
+                  </td>
+                  </div> : <div></div>}
+                  </tr>
             ))}
         </tbody>
       </table>
