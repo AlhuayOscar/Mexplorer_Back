@@ -46,9 +46,8 @@ function Nav({ show, swal }) {
       <nav className="flex flex-col gap-2">
         <Link
           href={"/"}
-          className={`${
-            pathname === "/" ? activeLink : inactiveLink
-          } transform transition-transform duration-100`}
+          className={`${pathname === "/" ? activeLink : inactiveLink
+            } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -74,9 +73,8 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/tours"}
-          className={`${
-            pathname.includes("/tours") ? activeLink : inactiveLink
-          } transform transition-transform duration-100`}
+          className={`${pathname.includes("/tours") ? activeLink : inactiveLink
+            } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -88,10 +86,23 @@ function Nav({ show, swal }) {
           Tours
         </Link>
         <Link
+          href={"/review"}
+          className={`${pathname.includes("/review") ? activeLink : inactiveLink
+            } transform transition-transform duration-100`}
+          onMouseEnter={(e) => {
+            e.target.classList.add("scale-110");
+          }}
+          onMouseLeave={(e) => {
+            e.target.classList.remove("scale-110");
+          }}
+        >
+          <BookIcon />
+          Review
+        </Link>
+        <Link
           href={"/blogs"}
-          className={`${
-            pathname.includes("/blogs") ? activeLink : inactiveLink
-          } transform transition-transform duration-100`}
+          className={`${pathname.includes("/blogs") ? activeLink : inactiveLink
+            } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -104,9 +115,8 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/orders"}
-          className={`${
-            pathname.includes("/orders") ? activeLink : inactiveLink
-          } transform transition-transform duration-300`}
+          className={`${pathname.includes("/orders") ? activeLink : inactiveLink
+            } transform transition-transform duration-300`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -119,9 +129,8 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/reservation"}
-          className={`${
-            pathname.includes("/reservation") ? activeLink : inactiveLink
-          } transform transition-transform duration-300`}
+          className={`${pathname.includes("/reservation") ? activeLink : inactiveLink
+            } transform transition-transform duration-300`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -134,9 +143,8 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/settings"}
-          className={`${
-            pathname.includes("/settings") ? activeLink : inactiveLink
-          } transform transition-transform duration-300`}
+          className={`${pathname.includes("/settings") ? activeLink : inactiveLink
+            } transform transition-transform duration-300`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
