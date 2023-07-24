@@ -31,6 +31,8 @@ export default async function handle(req, res) {
         review,
         notes,
         promo,
+        unavailableDays,
+        schedule
       } = req.body;
       const tourDoc = await Tour.create({
         name,
@@ -46,6 +48,8 @@ export default async function handle(req, res) {
         review,
         notes,
         promo,
+        unavailableDays,
+        schedule
       });
       return res.json(tourDoc);
     } catch (error) {
@@ -68,6 +72,8 @@ export default async function handle(req, res) {
       review,
       notes,
       promo,
+      unavailableDays,
+      schedule,
       _id,
     } = req.body;
     await Tour.updateOne(
@@ -86,6 +92,8 @@ export default async function handle(req, res) {
         review,
         notes,
         promo,
+        unavailableDays,
+        schedule
       }
     );
     return res.json(true);
