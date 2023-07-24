@@ -294,7 +294,6 @@ export default function TourForm({
       ) : (
         <div></div>
       )}
-
       <label>Fotos</label>
       <div className="mb-2 flex flex-wrap gap-1">
         <ReactSortable
@@ -423,7 +422,6 @@ export default function TourForm({
             </div>
           ))}
       </div>
-
       <div className="mb-2">
         <label>Notas</label>
         <button onClick={addNote} type="button">
@@ -543,7 +541,6 @@ export default function TourForm({
             </div>
           ))}
       </div>
-
       <label>¿Tiene promo?</label>
       <label>
         <input
@@ -585,7 +582,6 @@ export default function TourForm({
       ) : (
         <div></div>
       )}
-
       <label>Precio del tour para adultos</label>
       <input
         type="number"
