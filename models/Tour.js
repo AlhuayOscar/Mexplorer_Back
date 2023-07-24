@@ -1,4 +1,4 @@
-import { model, models, Schema, mongoose } from "mongoose";
+import { model, models, Schema } from "mongoose";
 
 const TourSchema = new Schema({
   name: { type: String, required: true },
@@ -28,7 +28,9 @@ const TourSchema = new Schema({
   includes: { type: [String] },
   requirements: { type: [String] },
   doesntIncludes: { type: [String] },
-  review: { type: [String] },
+  review: { 
+    total: { type: Number, default: 5 },
+    quantity: { type: Number, default: 0 } },
   notes: { type: [String] },
   promo: { type: Boolean, required: true },
   createdAt: { type: Date, default: Date.now },
