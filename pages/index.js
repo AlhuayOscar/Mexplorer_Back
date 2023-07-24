@@ -263,7 +263,7 @@ export default function Home() {
   };
 
   const uniquePrices = [
-    ...new Set(tourData.map((tour) => tour.price.usd?.adultsPrice)),
+    ...new Set(tourData.map((tour) => tour.price?.usd?.adultsPrice)),
   ];
 
   const tourPricesData = {
@@ -272,7 +272,7 @@ export default function Home() {
       {
         data: uniquePrices.map((adultsPrice) => {
           return tourData.filter(
-            (tour) => tour.price && tour.price.usd?.adultsPrice === adultsPrice
+            (tour) => tour.price && tour.price?.usd?.adultsPrice === adultsPrice
           ).length;
         }),
         backgroundColor: backgroundColors.slice(2, 11),

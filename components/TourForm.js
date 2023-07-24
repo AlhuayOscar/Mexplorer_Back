@@ -17,8 +17,14 @@ export default function TourForm({
   requirements: existingRequirements,
   notes: existingNotes,
   promo: existingPromo,
+  unavailableDays: existingUnavailableDays,
+  schedule: existingSchedule,
 }) {
   const { mxn, usd } = existingPrice || {};
+  const [unavailableDays, setUnavailableDays] = useState(
+    existingUnavailableDays || []
+  );
+  const [schedule, setSchedule] = useState(existingSchedule || []);
   const [name, setName] = useState(existingName || "");
   const [subtitle, setSubtitle] = useState(existingSubtitle || "");
   const [description, setDescription] = useState(existingDescription || "");
@@ -61,8 +67,8 @@ export default function TourForm({
 
   const [goToTours, setGoToTours] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  // const [categories, setCategories] = useState([]);
   const router = useRouter();
+
   async function saveTour(ev) {
     ev.preventDefault();
     const data = {
@@ -73,18 +79,18 @@ export default function TourForm({
       reservation,
       price: {
         usd: {
-          adultsPrice: parseInt(adultsPriceUSD),
-          childrenPrice: parseInt(childrenPriceUSD),
-          adultsReservationPrice: parseInt(adultsReservationPriceUSD),
-          childrenReservationPrice: parseInt(childrenReservationPriceUSD),
-          withoutPromoAdultsPrice: parseInt(withoutPromoPriceUSD),
+          adultsPrice: parseFloat(adultsPriceUSD),
+          childrenPrice: parseFloat(childrenPriceUSD),
+          adultsReservationPrice: parseFloat(adultsReservationPriceUSD),
+          childrenReservationPrice: parseFloat(childrenReservationPriceUSD),
+          withoutPromoAdultsPrice: parseFloat(withoutPromoPriceUSD),
         },
         mxn: {
-          adultsPrice: parseInt(adultsPriceMXN),
-          childrenPrice: parseInt(childrenPriceMXN),
-          adultsReservationPrice: parseInt(adultsReservationPriceMXN),
-          childrenReservationPrice: parseInt(childrenReservationPriceMXN),
-          withoutPromoAdultsPrice: parseInt(withoutPromoPriceMXN),
+          adultsPrice: parseFloat(adultsPriceMXN),
+          childrenPrice: parseFloat(childrenPriceMXN),
+          adultsReservationPrice: parseFloat(adultsReservationPriceMXN),
+          childrenReservationPrice: parseFloat(childrenReservationPriceMXN),
+          withoutPromoAdultsPrice: parseFloat(withoutPromoPriceMXN),
         },
       },
       images,
@@ -93,8 +99,10 @@ export default function TourForm({
       requirements,
       notes,
       promo,
+      unavailableDays,
+      schedule,
     };
-    console.log(data.price);
+    console.log(data);
     if (_id) {
       //update
       await axios.put("/api/tours", { ...data, _id });
@@ -173,6 +181,33 @@ export default function TourForm({
       });
     });
   }
+
+  function addSchedule() {
+    setSchedule((prev) => [...prev, ""]);
+  }
+
+  function removeSchedule(indexToRemove) {
+    setSchedule((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  const handleCheckboxChange = (ev) => {
+    const value = parseInt(ev.target.value);
+    const updatedUnavailableDays = [...unavailableDays];
+
+    if (updatedUnavailableDays.includes(value)) {
+      const index = updatedUnavailableDays.indexOf(value);
+      if (index !== -1) {
+        updatedUnavailableDays.splice(index, 1);
+      }
+    } else {
+      updatedUnavailableDays.push(value);
+    }
+    setUnavailableDays(updatedUnavailableDays);
+  };
 
   return (
     <form onSubmit={saveTour}>
@@ -410,6 +445,96 @@ export default function TourForm({
               />
               <button
                 onClick={() => removeNote(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
+      <div>
+        <label>¿Qué días no está disponible?</label>
+      </div>
+      <div>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={0}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(0)}
+        />
+        <label>Domingo</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={1}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(1)}
+        />
+        <label>Lunes</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={2}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(2)}
+        />
+        <label>Martes</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={3}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(3)}
+        />
+        <label>Miércoles</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={4}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(4)}
+        />
+        <label>Jueves</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={5}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(5)}
+        />
+        <label>Viernes</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={6}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(6)}
+        />
+        <label>Sábado</label>
+      </div>
+      <div className="mb-2">
+        <label>¿En qué horarios está disponible?</label>
+        <button onClick={addSchedule} type="button">
+          Añadir
+        </button>
+        {schedule.length > 0 &&
+          schedule.map((time, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="time"
+                value={time}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newTime = [...schedule];
+                  newTime[index] = ev.target.value;
+                  setSchedule(newTime);
+                }}
+                placeholder="Añadir horario disponible"
+              />
+              <button
+                onClick={() => removeSchedule(index)}
                 type="button"
                 className="btn-red"
               >
