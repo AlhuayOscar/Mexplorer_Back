@@ -8,6 +8,7 @@ import BookIcon from "@mui/icons-material/Book";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import LinkIcon from "@mui/icons-material/Link";
+import ReviewsIcon from '@mui/icons-material/Reviews';
 function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-lg";
@@ -96,7 +97,7 @@ function Nav({ show, swal }) {
             e.target.classList.remove("scale-110");
           }}
         >
-          <BookIcon />
+          <ReviewsIcon />
           Review
         </Link>
         <Link
