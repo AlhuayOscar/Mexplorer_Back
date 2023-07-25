@@ -10,6 +10,7 @@ import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import LinkIcon from "@mui/icons-material/Link";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 
+import ReviewsIcon from '@mui/icons-material/Reviews';
 function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-lg";
