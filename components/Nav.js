@@ -8,6 +8,8 @@ import BookIcon from "@mui/icons-material/Book";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import LinkIcon from "@mui/icons-material/Link";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+
 import ReviewsIcon from '@mui/icons-material/Reviews';
 function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
@@ -47,8 +49,9 @@ function Nav({ show, swal }) {
       <nav className="flex flex-col gap-2">
         <Link
           href={"/"}
-          className={`${pathname === "/" ? activeLink : inactiveLink
-            } transform transition-transform duration-100`}
+          className={`${
+            pathname === "/" ? activeLink : inactiveLink
+          } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -74,8 +77,9 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/tours"}
-          className={`${pathname.includes("/tours") ? activeLink : inactiveLink
-            } transform transition-transform duration-100`}
+          className={`${
+            pathname.includes("/tours") ? activeLink : inactiveLink
+          } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -88,8 +92,9 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/review"}
-          className={`${pathname.includes("/review") ? activeLink : inactiveLink
-            } transform transition-transform duration-100`}
+          className={`${
+            pathname.includes("/review") ? activeLink : inactiveLink
+          } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -97,13 +102,14 @@ function Nav({ show, swal }) {
             e.target.classList.remove("scale-110");
           }}
         >
-          <ReviewsIcon />
+          <RateReviewIcon></RateReviewIcon>
           Review
         </Link>
         <Link
           href={"/blogs"}
-          className={`${pathname.includes("/blogs") ? activeLink : inactiveLink
-            } transform transition-transform duration-100`}
+          className={`${
+            pathname.includes("/blogs") ? activeLink : inactiveLink
+          } transform transition-transform duration-100`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -116,8 +122,9 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/orders"}
-          className={`${pathname.includes("/orders") ? activeLink : inactiveLink
-            } transform transition-transform duration-300`}
+          className={`${
+            pathname.includes("/orders") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -130,8 +137,9 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/reservation"}
-          className={`${pathname.includes("/reservation") ? activeLink : inactiveLink
-            } transform transition-transform duration-300`}
+          className={`${
+            pathname.includes("/reservation") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
@@ -144,8 +152,9 @@ function Nav({ show, swal }) {
         </Link>
         <Link
           href={"/settings"}
-          className={`${pathname.includes("/settings") ? activeLink : inactiveLink
-            } transform transition-transform duration-300`}
+          className={`${
+            pathname.includes("/settings") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
           onMouseEnter={(e) => {
             e.target.classList.add("scale-110");
           }}
