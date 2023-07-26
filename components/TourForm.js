@@ -77,14 +77,41 @@ export default function TourForm({
       { name: "Nombre del Tour", value: name },
       { name: "Duración del Tour", value: duration },
       {
-        name: "Precio de Adultos en Dolares o Pesos",
+        name: "Precio de Adultos en USD o MXN",
         value: adultsPriceUSD || adultsPriceMXN,
       },
       {
-        name: "Precio de Niños en Dolares o Pesos",
+        name: "Precio de Niños en USD o MXN",
         value: childrenPriceUSD || childrenPriceMXN,
       },
     ];
+
+    // Check if reservation is selected, then check reservation prices in USD or MXN
+    if (reservation) {
+      const hasAdultsReservationPrice =
+        adultsReservationPriceUSD || adultsReservationPriceMXN;
+      const hasChildrenReservationPrice =
+        childrenReservationPriceUSD || childrenReservationPriceMXN;
+
+      if (!hasAdultsReservationPrice && !hasChildrenReservationPrice) {
+        requiredFields.push({
+          name: "Precio de la reserva para adultos y/o niños en USD o MXN",
+          value: false,
+        });
+      }
+    }
+
+    // Check if promo is selected, then check promo prices in USD or MXN
+    if (promo) {
+      const hasWithoutPromoPrice = withoutPromoPriceUSD || withoutPromoPriceMXN;
+
+      if (!hasWithoutPromoPrice) {
+        requiredFields.push({
+          name: "Precio anterior para PROMO en USD o MXN",
+          value: false,
+        });
+      }
+    }
 
     const emptyFields = requiredFields.filter((field) => !field.value);
 
