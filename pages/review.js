@@ -3,11 +3,15 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Review } from "@/models/Review";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import CustomPagination from "../components/Pagination.js";
+
+const ITEMS_PER_PAGE = 15;
 
 export default function DeleteReview({ review }) {
     const [reviews, setReviews] = useState([]);
     const [showAllReviews, setShowAllReviews] = useState(false);
     const [expandedComments, setExpandedComments] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const limitedReviews = reviews.slice(0, 3);
 
@@ -48,6 +52,18 @@ export default function DeleteReview({ review }) {
         }
     };
 
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const totalItems = reviews.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    const paginatedReviews = reviews.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
     return (
         <Layout>
             <div>
@@ -62,7 +78,7 @@ export default function DeleteReview({ review }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {reviews.map((review) => (
+                        {paginatedReviews.map((review) => (
                             <tr key={review._id} className="border-b">
                                 <td className="p-4">{review.title}</td>
                                 <td className="p-4">
@@ -123,6 +139,11 @@ export default function DeleteReview({ review }) {
                     </tbody>
                 </table>
             </div>
+            <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+            />
         </Layout>
     );
 }
