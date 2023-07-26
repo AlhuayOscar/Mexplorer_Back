@@ -330,8 +330,9 @@ export default function TourForm({
         type="number"
         placeholder="cantidad de horas"
         value={duration}
-        onChange={(ev) => setDuration(ev.target.value)}
+        onChange={(ev) => setDuration(Math.max(1, ev.target.value))}
         onWheel={(ev) => ev.preventDefault()}
+        min={1} // Agregamos esta línea para evitar números negativos o 0
       />
       <label>¿Se puede reservar?</label>
       <div className="flex">
@@ -362,6 +363,7 @@ export default function TourForm({
             value={adultsReservationPriceUSD}
             onChange={(ev) => setAdultsReservationPriceUSD(ev.target.value)}
             onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
           />
           <input
             type="number"
@@ -369,6 +371,7 @@ export default function TourForm({
             value={adultsReservationPriceMXN}
             onChange={(ev) => setAdultsReservationPriceMXN(ev.target.value)}
             onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
           />
           <label>Precio de la reserva para niños</label>
           <input
@@ -377,6 +380,7 @@ export default function TourForm({
             value={childrenReservationPriceUSD}
             onChange={(ev) => setChildrenReservationPriceUSD(ev.target.value)}
             onWheel={(ev) => ev.preventDefault()}
+            min={0} // Agregamos esta línea para evitar números negativos o 0
           />
           <input
             type="number"
@@ -384,6 +388,7 @@ export default function TourForm({
             value={childrenReservationPriceMXN}
             onChange={(ev) => setChildrenReservationPriceMXN(ev.target.value)}
             onWheel={(ev) => ev.preventDefault()}
+            min={0} // Agregamos esta línea para evitar números negativos o 0
           />
         </div>
       ) : (
@@ -665,6 +670,7 @@ export default function TourForm({
             value={withoutPromoPriceUSD}
             onChange={(ev) => setWithoutPromoPriceUSD(ev.target.value)}
             onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
           />
           <input
             type="number"
@@ -672,6 +678,7 @@ export default function TourForm({
             value={withoutPromoPriceMXN}
             onChange={(ev) => setWithoutPromoPriceMXN(ev.target.value)}
             onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
           />
         </div>
       ) : (
@@ -681,18 +688,18 @@ export default function TourForm({
       <input
         type="number"
         placeholder="Precio en USD"
-        min={1}
         value={adultsPriceUSD}
-        onChange={(ev) => setAdultsPriceUSD(ev.target.value)}
+        onChange={(ev) => setAdultsPriceUSD(Math.max(1, ev.target.value))}
         onWheel={(ev) => ev.preventDefault()}
+        min={1} // Agregamos esta línea para evitar números negativos o 0
       />
       <input
         type="number"
         placeholder="Precio en MXN"
-        min={1}
         value={adultsPriceMXN}
-        onChange={(ev) => setAdultsPriceMXN(ev.target.value)}
+        onChange={(ev) => setAdultsPriceMXN(Math.max(1, ev.target.value))}
         onWheel={(ev) => ev.preventDefault()}
+        min={1} // Agregamos esta línea para evitar números negativos o 0
       />
       <label>Precio del tour para niños</label>
       <input
@@ -701,6 +708,7 @@ export default function TourForm({
         value={childrenPriceUSD}
         onChange={(ev) => setChildrenPriceUSD(ev.target.value)}
         onWheel={(ev) => ev.preventDefault()}
+        min={0} // Agregamos esta línea para evitar números negativos o 0
       />
       <input
         type="number"
@@ -708,6 +716,7 @@ export default function TourForm({
         value={childrenPriceMXN}
         onChange={(ev) => setChildrenPriceMXN(ev.target.value)}
         onWheel={(ev) => ev.preventDefault()}
+        min={0} // Agregamos esta línea para evitar números negativos o 0
       />
       <button type="submit" className="btn-primary">
         Guardar

@@ -2,13 +2,32 @@ import { useState, useEffect } from "react";
 import Layout from "../components/Layout.js";
 import Link from "next/link.js";
 import axios from "axios";
+import CustomPagination from "../components/Pagination.js";
+
+const ITEMS_PER_PAGE = 15;
+
 export default function Tours() {
   const [tours, setTours] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     axios.get("/api/tours").then((response) => {
       setTours(response.data);
     });
   }, []);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalItems = tours.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  const paginatedTours = tours.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <Layout>
       <Link className="btn-primary" href={"/tours/new"}>
@@ -22,7 +41,7 @@ export default function Tours() {
           </tr>
         </thead>
         <tbody>
-          {tours.map((tour) => (
+          {paginatedTours.map((tour) => (
             <tr key={tour._id}>
               <td>{tour.name}</td>
               <td>
@@ -65,6 +84,11 @@ export default function Tours() {
           ))}
         </tbody>
       </table>
+      <CustomPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </Layout>
   );
 }
