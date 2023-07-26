@@ -72,8 +72,46 @@ export default function TourForm({
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
+  function checkRequiredFields() {
+    const requiredFields = [
+      { name: "Nombre del Tour", value: name },
+      { name: "Duración del Tour", value: duration },
+      {
+        name: "Precio de Adultos en Dolares o Pesos",
+        value: adultsPriceUSD || adultsPriceMXN,
+      },
+      {
+        name: "Precio de Niños en Dolares o Pesos",
+        value: childrenPriceUSD || childrenPriceMXN,
+      },
+    ];
+
+    const emptyFields = requiredFields.filter((field) => !field.value);
+
+    if (emptyFields.length > 0) {
+      MySwal.fire({
+        icon: "warning",
+        title: "Campos obligatorios incompletos",
+        html: `Los siguientes campos son obligatorios:<br/>${emptyFields
+          .map((field) => `- ${field.name}`)
+          .join("<br/>")}`,
+      });
+      return false;
+    }
+
+    return true;
+  }
+
   async function saveTour(ev) {
     ev.preventDefault();
+
+    // Check if required fields are completed
+    const isValid = checkRequiredFields();
+
+    if (!isValid) {
+      return;
+    }
+
     const data = {
       name,
       subtitle,
@@ -108,7 +146,7 @@ export default function TourForm({
 
     console.log(data);
     if (_id) {
-      //update
+      // Update existing tour
       try {
         await axios.put("/api/tours", { ...data, _id });
         setGoToTours(true);
@@ -116,7 +154,7 @@ export default function TourForm({
         handleServerError(error);
       }
     } else {
-      //create
+      // Create a new tour
       try {
         await axios.post("/api/tours", data);
         setGoToTours(true);
@@ -125,6 +163,7 @@ export default function TourForm({
       }
     }
   }
+
   async function handleServerError(error) {
     if (error.response && error.response.status === 500) {
       MySwal.fire({
