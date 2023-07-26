@@ -30,27 +30,27 @@ export default function TourForm({
   const [description, setDescription] = useState(existingDescription || "");
   const [duration, setDuration] = useState(existingDuration || null);
   const [childrenPriceUSD, setChildrenPriceUSD] = useState(
-    existingPrice?.usd.childrenPrice || null
+    existingPrice?.usd?.childrenPrice || null
   );
   const [childrenPriceMXN, setChildrenPriceMXN] = useState(
-    existingPrice?.mxn.childrenPrice || null
+    existingPrice?.mxn?.childrenPrice || null
   );
   const [adultsPriceUSD, setAdultsPriceUSD] = useState(
-    existingPrice?.usd.adultsPrice || null
+    existingPrice?.usd?.adultsPrice || null
   );
   const [adultsPriceMXN, setAdultsPriceMXN] = useState(
-    existingPrice?.mxn.adultsPrice || null
+    existingPrice?.mxn?.adultsPrice || null
   );
   const [reservation, setReservation] = useState(existingReservation || false);
   const [childrenReservationPriceUSD, setChildrenReservationPriceUSD] =
-    useState(existingPrice?.usd.childrenReservationPrice || null);
+    useState(existingPrice?.usd?.childrenReservationPrice || null);
   const [childrenReservationPriceMXN, setChildrenReservationPriceMXN] =
-    useState(existingPrice?.mxn.childrenReservationPrice || null);
+    useState(existingPrice?.mxn?.childrenReservationPrice || null);
   const [adultsReservationPriceUSD, setAdultsReservationPriceUSD] = useState(
-    existingPrice?.usd.adultsReservationPrice || null
+    existingPrice?.usd?.adultsReservationPrice || null
   );
   const [adultsReservationPriceMXN, setAdultsReservationPriceMXN] = useState(
-    existingPrice?.mxn.adultsReservationPrice || null
+    existingPrice?.mxn?.adultsReservationPrice || null
   );
   const [images, setImages] = useState(existingImages || []);
   const [includes, setIncludes] = useState(existingIncludes || []);
@@ -59,10 +59,10 @@ export default function TourForm({
   const [notes, setNotes] = useState(existingNotes || "");
   const [promo, setPromo] = useState(existingPromo || false);
   const [withoutPromoPriceUSD, setWithoutPromoPriceUSD] = useState(
-    existingPrice?.usd.withoutPromoAdultsPrice || null
+    existingPrice?.usd?.withoutPromoAdultsPrice || null
   );
   const [withoutPromoPriceMXN, setWithoutPromoPriceMXN] = useState(
-    existingPrice?.mxn.withoutPromoAdultsPrice || null
+    existingPrice?.mxn?.withoutPromoAdultsPrice || null
   );
 
   const [goToTours, setGoToTours] = useState(false);
