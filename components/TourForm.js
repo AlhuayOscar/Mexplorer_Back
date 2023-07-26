@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { ReactSortable } from "react-sortablejs";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 
 export default function TourForm({
   _id,
@@ -20,49 +23,49 @@ export default function TourForm({
   unavailableDays: existingUnavailableDays,
   schedule: existingSchedule,
 }) {
-  const { mxn, usd } = existingPrice || {};
+  const { mxn, usd } = existingPrice ?? {};
   const [unavailableDays, setUnavailableDays] = useState(
-    existingUnavailableDays || []
+    existingUnavailableDays ?? []
   );
-  const [schedule, setSchedule] = useState(existingSchedule || []);
-  const [name, setName] = useState(existingName || "");
-  const [subtitle, setSubtitle] = useState(existingSubtitle || "");
-  const [description, setDescription] = useState(existingDescription || "");
-  const [duration, setDuration] = useState(existingDuration || null);
+  const [schedule, setSchedule] = useState(existingSchedule ?? []);
+  const [name, setName] = useState(existingName ?? "");
+  const [subtitle, setSubtitle] = useState(existingSubtitle ?? "");
+  const [description, setDescription] = useState(existingDescription ?? "");
+  const [duration, setDuration] = useState(existingDuration ?? null);
   const [childrenPriceUSD, setChildrenPriceUSD] = useState(
-    existingPrice?.usd?.childrenPrice || null
+    existingPrice?.usd?.childrenPrice ?? null
   );
   const [childrenPriceMXN, setChildrenPriceMXN] = useState(
-    existingPrice?.mxn?.childrenPrice || null
+    existingPrice?.mxn?.childrenPrice ?? null
   );
   const [adultsPriceUSD, setAdultsPriceUSD] = useState(
-    existingPrice?.usd?.adultsPrice || null
+    existingPrice?.usd?.adultsPrice ?? null
   );
   const [adultsPriceMXN, setAdultsPriceMXN] = useState(
-    existingPrice?.mxn?.adultsPrice || null
+    existingPrice?.mxn?.adultsPrice ?? null
   );
-  const [reservation, setReservation] = useState(existingReservation || false);
+  const [reservation, setReservation] = useState(existingReservation ?? false);
   const [childrenReservationPriceUSD, setChildrenReservationPriceUSD] =
-    useState(existingPrice?.usd?.childrenReservationPrice || null);
+    useState(existingPrice?.usd?.childrenReservationPrice ?? null);
   const [childrenReservationPriceMXN, setChildrenReservationPriceMXN] =
-    useState(existingPrice?.mxn?.childrenReservationPrice || null);
+    useState(existingPrice?.mxn?.childrenReservationPrice ?? null);
   const [adultsReservationPriceUSD, setAdultsReservationPriceUSD] = useState(
-    existingPrice?.usd?.adultsReservationPrice || null
+    existingPrice?.usd?.adultsReservationPrice ?? null
   );
   const [adultsReservationPriceMXN, setAdultsReservationPriceMXN] = useState(
-    existingPrice?.mxn?.adultsReservationPrice || null
+    existingPrice?.mxn?.adultsReservationPrice ?? null
   );
-  const [images, setImages] = useState(existingImages || []);
-  const [includes, setIncludes] = useState(existingIncludes || []);
-  const [doesntIncludes, setDoesntIncludes] = useState(existingIncludes || []);
-  const [requirements, setRequirements] = useState(existingRequirements || []);
-  const [notes, setNotes] = useState(existingNotes || "");
-  const [promo, setPromo] = useState(existingPromo || false);
+  const [images, setImages] = useState(existingImages ?? []);
+  const [includes, setIncludes] = useState(existingIncludes ?? []);
+  const [doesntIncludes, setDoesntIncludes] = useState(existingIncludes ?? []);
+  const [requirements, setRequirements] = useState(existingRequirements ?? []);
+  const [notes, setNotes] = useState(existingNotes ?? "");
+  const [promo, setPromo] = useState(existingPromo ?? false);
   const [withoutPromoPriceUSD, setWithoutPromoPriceUSD] = useState(
-    existingPrice?.usd?.withoutPromoAdultsPrice || null
+    existingPrice?.usd?.withoutPromoAdultsPrice ?? null
   );
   const [withoutPromoPriceMXN, setWithoutPromoPriceMXN] = useState(
-    existingPrice?.mxn?.withoutPromoAdultsPrice || null
+    existingPrice?.mxn?.withoutPromoAdultsPrice ?? null
   );
 
   const [goToTours, setGoToTours] = useState(false);
@@ -102,15 +105,41 @@ export default function TourForm({
       unavailableDays,
       schedule,
     };
+
     console.log(data);
     if (_id) {
       //update
-      await axios.put("/api/tours", { ...data, _id });
+      try {
+        await axios.put("/api/tours", { ...data, _id });
+        setGoToTours(true);
+      } catch (error) {
+        handleServerError(error);
+      }
     } else {
       //create
-      await axios.post("/api/tours", data);
+      try {
+        await axios.post("/api/tours", data);
+        setGoToTours(true);
+      } catch (error) {
+        handleServerError(error);
+      }
     }
-    setGoToTours(true);
+  }
+  async function handleServerError(error) {
+    if (error.response && error.response.status === 500) {
+      MySwal.fire({
+        icon: "question",
+        title: "Error 500 - Información no encontrada en el servidor",
+        text: "Por favor, ponerse en contacto con los administradores :/",
+      });
+    } else {
+      // Handle other types of errors or display a generic error message.
+      MySwal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ha ocurrido un error en el servidor. Por favor, intenta nuevamente.",
+      });
+    }
   }
   if (goToTours) {
     router.push("/tours");
