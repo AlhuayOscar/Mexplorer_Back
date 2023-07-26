@@ -32,7 +32,7 @@ export default function OrdersPage() {
       <h1>Pedidos</h1>
       <table className="basic">
         <thead>
-          <tr>
+          <tr key="header">
             <th>Fecha</th>
             <th>Tipo de orden</th>
             <th>Está pago?</th>
@@ -43,31 +43,37 @@ export default function OrdersPage() {
         </thead>
         <tbody>
           {paginatedOrders.length > 0 &&
-            paginatedOrders.map((order) => (
-              <tr key={order._id}>
-                {order.kind === "Compra" ? <div>
-                  <td>{new Date(order.createdAt).toLocaleString()}</td>
-                  <td>{order.kind}</td>
-                  <td className={order.paid ? "text-green-600" : "text-red-600"}>
-                    {order.paid ? "YES" : "NO"}
-                  </td>
-                  <td>
-                    {order.name} {order.lastname}
-                    <br />
-                    {order.email}
-                  </td>
-                  <td>
-                    {order.line_items?.map((l) => (
-                      <>
-                        <td>
-                          {l.price_data?.product_data?.name || "Tour sin registrar "}
-                        </td>
-                        <td>{l.quantity}</td>
-                        <br />
-                      </>
-                    ))}
-                  </td>
-                </div> : <div></div>}
+            paginatedOrders.map((order, index) => (
+              <tr key={index}>
+                {order.kind === "Compra" ? (
+                  <>
+                    <td>{new Date(order.createdAt).toLocaleString()}</td>
+                    <td>{order.kind}</td>
+                    <td
+                      className={order.paid ? "text-green-600" : "text-red-600"}
+                    >
+                      {order.paid ? "YES" : "NO"}
+                    </td>
+                    <td>
+                      {order.name} {order.lastname}
+                      <br />
+                      {order.email}
+                    </td>
+                    <td>
+                      {order.line_items?.map((item, index) => (
+                        <div key={index}>
+                          <span>
+                            {item.price_data?.product_data?.name ||
+                              "Tour sin registrar "}
+                          </span>
+                          <span>{item.quantity}</span>
+                        </div>
+                      ))}
+                    </td>
+                  </>
+                ) : (
+                  <td colSpan="6">Empty row</td>
+                )}
               </tr>
             ))}
         </tbody>

@@ -43,10 +43,10 @@ export default function OrdersPage() {
         </thead>
         <tbody>
           {paginatedReservation.length > 0 &&
-            paginatedReservation.map((order) => (
-              <tr key={order._id}>
+            paginatedReservation.map((order, index) => (
+              <tr key={index}>
                 {order.kind === "Reserva" ? (
-                  <div>
+                  <>
                     <td>{new Date(order.date).toLocaleString()}</td>
                     <td>{order.kind}</td>
                     <td
@@ -62,19 +62,19 @@ export default function OrdersPage() {
                     <td>{order.persons}</td>
                     <td>
                       {order.line_items?.map((l) => (
-                        <>
+                        <React.Fragment key={l.id}>
                           <td>
                             {l.price_data?.product_data?.name ||
                               "Tour sin registrar "}
                           </td>
                           <td>{l.quantity}</td>
                           <br />
-                        </>
+                        </React.Fragment>
                       ))}
                     </td>
-                  </div>
+                  </>
                 ) : (
-                  <div></div>
+                  <td colSpan="6">No hay información para tal fecha o tour.</td>
                 )}
               </tr>
             ))}

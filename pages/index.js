@@ -54,7 +54,6 @@ export default function Home() {
         });
     }
   }, [session]);
-  console.log(tourData);
   useEffect(() => {
     axios
       .get("/api/orders")
@@ -165,8 +164,7 @@ export default function Home() {
         setFilteredValueMonths(filteredValueMonths);
         setFilteredOrdersMonth(filteredOrdersMonth);
         // Imprimir los arreglos de suma total y cantidad total de órdenes por mes
-        console.log("valueMonths:", filteredValueMonths);
-        console.log("ordersMonth:", filteredOrdersMonth);
+
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -235,7 +233,7 @@ export default function Home() {
   if (isLoading || status === "loading") {
     return (
       <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
-        <img
+        <img  
           src="/mex_logo.png"
           alt="Logo de México"
           className="mt-4 max-w-350px max-h-full animate-fadeIn"
