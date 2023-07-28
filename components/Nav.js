@@ -6,7 +6,9 @@ import { withSwal } from "react-sweetalert2";
 import TourIcon from "@mui/icons-material/Tour";
 import BookIcon from "@mui/icons-material/Book";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import LinkIcon from "@mui/icons-material/Link";
+import ReviewsIcon from "@mui/icons-material/Reviews";
 function Nav({ show, swal }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-lg";
@@ -87,6 +89,21 @@ function Nav({ show, swal }) {
           Tours
         </Link>
         <Link
+          href={"/review"}
+          className={`${
+            pathname.includes("/review") ? activeLink : inactiveLink
+          } transform transition-transform duration-100`}
+          onMouseEnter={(e) => {
+            e.target.classList.add("scale-110");
+          }}
+          onMouseLeave={(e) => {
+            e.target.classList.remove("scale-110");
+          }}
+        >
+          <ReviewsIcon />
+          Review
+        </Link>
+        <Link
           href={"/blogs"}
           className={`${
             pathname.includes("/blogs") ? activeLink : inactiveLink
@@ -115,6 +132,36 @@ function Nav({ show, swal }) {
         >
           <ReceiptLongIcon />
           Ordenes
+        </Link>
+        <Link
+          href={"/reservation"}
+          className={`${
+            pathname.includes("/reservation") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
+          onMouseEnter={(e) => {
+            e.target.classList.add("scale-110");
+          }}
+          onMouseLeave={(e) => {
+            e.target.classList.remove("scale-110");
+          }}
+        >
+          <AutoStoriesIcon />
+          Reservas
+        </Link>
+        <Link
+          href={"/settings"}
+          className={`${
+            pathname.includes("/settings") ? activeLink : inactiveLink
+          } transform transition-transform duration-300`}
+          onMouseEnter={(e) => {
+            e.target.classList.add("scale-110");
+          }}
+          onMouseLeave={(e) => {
+            e.target.classList.remove("scale-110");
+          }}
+        >
+          <LinkIcon />
+          Enlaces
         </Link>
         <button
           onClick={logout}

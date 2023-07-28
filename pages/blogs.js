@@ -2,13 +2,33 @@ import { useState, useEffect } from "react";
 import Layout from "../components/Layout.js";
 import Link from "next/link.js";
 import axios from "axios";
+import CustomPagination from "../components/Pagination.js";
+
+
+const ITEMS_PER_PAGE = 15;
+
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     axios.get("/api/blogs").then((response) => {
       setBlogs(response.data);
     });
   }, []);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const totalItems = blogs.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  const paginatedBlogs = blogs.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <Layout>
       <Link className="btn-primary" href={"/blogs/new"}>
@@ -22,7 +42,7 @@ export default function Blogs() {
           </tr>
         </thead>
         <tbody>
-          {blogs.map((post) => (
+          {paginatedBlogs.map((post) => (
             <tr key={post._id}>
               <td>{post.title}</td>
               <td>
@@ -65,6 +85,11 @@ export default function Blogs() {
           ))}
         </tbody>
       </table>
+      <CustomPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </Layout>
   );
 }

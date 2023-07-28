@@ -164,8 +164,7 @@ export default function Home() {
         setFilteredValueMonths(filteredValueMonths);
         setFilteredOrdersMonth(filteredOrdersMonth);
         // Imprimir los arreglos de suma total y cantidad total de órdenes por mes
-        console.log("valueMonths:", filteredValueMonths);
-        console.log("ordersMonth:", filteredOrdersMonth);
+
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -234,7 +233,7 @@ export default function Home() {
   if (isLoading || status === "loading") {
     return (
       <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
-        <img
+        <img  
           src="/mex_logo.png"
           alt="Logo de México"
           className="mt-4 max-w-350px max-h-full animate-fadeIn"
@@ -262,14 +261,24 @@ export default function Home() {
     ],
   };
 
-  const uniquePrices = [...new Set(tourData.map((tour) => tour.price))];
+  const last5Tours = tourData.slice(-5); // Obtenemos los últimos 5 elementos de tourData
 
+  const uniqueNames = [...new Set(last5Tours.map((tour) => tour.name))];
+
+  const uniquePrices = [
+    ...new Set(last5Tours.map((tour) => tour.price?.usd?.adultsPrice)),
+  ];
   const tourPricesData = {
-    labels: uniquePrices.map((price) => price.toString()),
+    labels: uniqueNames,
     datasets: [
       {
-        data: uniquePrices.map((price) => {
-          return tourData.filter((tour) => tour.price === price).length;
+        data: uniquePrices.map((adultsPrice) => {
+          return (
+            last5Tours.find(
+              (tour) =>
+                tour.price && tour.price?.usd?.adultsPrice === adultsPrice
+            )?.price?.usd?.adultsPrice || 0
+          );
         }),
         backgroundColor: backgroundColors.slice(2, 11),
         borderColor: chartColors.slice(2, 11),

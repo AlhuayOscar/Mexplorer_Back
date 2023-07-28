@@ -22,32 +22,32 @@ export default function OrdersPage() {
   const totalItems = orders.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  const paginatedOrders = orders.slice(
+  const paginatedReservation = orders.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
 
   return (
     <Layout>
-      <h1>Pedidos</h1>
+      <h1>RESERVAS</h1>
       <table className="basic">
         <thead>
-          <tr key="header">
-            <th>Fecha</th>
+          <tr>
+            <th>Fecha de la reserva</th>
             <th>Tipo de orden</th>
             <th>Está pago?</th>
             <th>Datos del consumidor</th>
             <th>Productos</th>
-            <th>Cantidad</th>
+            <th>Cantidad de personas</th>
           </tr>
         </thead>
         <tbody>
-          {paginatedOrders.length > 0 &&
-            paginatedOrders.map((order, index) => (
+          {paginatedReservation.length > 0 &&
+            paginatedReservation.map((order, index) => (
               <tr key={index}>
-                {order.kind === "Compra" ? (
+                {order.kind === "Reserva" ? (
                   <>
-                    <td>{new Date(order.createdAt).toLocaleString()}</td>
+                    <td>{new Date(order.date).toLocaleString()}</td>
                     <td>{order.kind}</td>
                     <td
                       className={order.paid ? "text-green-600" : "text-red-600"}
@@ -59,20 +59,22 @@ export default function OrdersPage() {
                       <br />
                       {order.email}
                     </td>
+                    <td>{order.persons}</td>
                     <td>
-                      {order.line_items?.map((item, index) => (
-                        <div key={index}>
-                          <span>
-                            {item.price_data?.product_data?.name ||
+                      {order.line_items?.map((l) => (
+                        <React.Fragment key={l.id}>
+                          <td>
+                            {l.price_data?.product_data?.name ||
                               "Tour sin registrar "}
-                          </span>
-                          <span>{item.quantity}</span>
-                        </div>
+                          </td>
+                          <td>{l.quantity}</td>
+                          <br />
+                        </React.Fragment>
                       ))}
                     </td>
                   </>
                 ) : (
-                  <td colSpan="6">Empty row</td>
+                  <td colSpan="6">No hay información para tal fecha o tour.</td>
                 )}
               </tr>
             ))}

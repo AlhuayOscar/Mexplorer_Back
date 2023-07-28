@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import { ReactSortable } from "react-sortablejs";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 
 export default function TourForm({
   _id,
@@ -10,68 +13,199 @@ export default function TourForm({
   subtitle: existingSubtitle,
   description: existingDescription,
   duration: existingDuration,
-  price: existingPrice,
   reservation: existingReservation,
-  reservationPrice: existingReservationPrice,
   images: existingImages,
   includes: existingIncludes,
+  price: existingPrice,
   requirements: existingRequirements,
   notes: existingNotes,
   promo: existingPromo,
-  withoutPromoPrice: existingPromoPrice,
-  // category: assignedCategory,
-  // properties: assignedProperties,
+  unavailableDays: existingUnavailableDays,
+  schedule: existingSchedule,
 }) {
-  const [name, setName] = useState(existingName || "");
-  const [subtitle, setSubtitle] = useState(existingSubtitle || "");
-  const [description, setDescription] = useState(existingDescription || "");
-  const [duration, setDuration] = useState(existingDuration || 0);
-  const [price, setPrice] = useState(existingPrice || 0);
-  const [reservation, setReservation] = useState(existingReservation || false);
-  const [reservationPrice, setReservationPrice] = useState(
-    existingReservationPrice || 0
+  const { mxn, usd } = existingPrice ?? {};
+  const [unavailableDays, setUnavailableDays] = useState(
+    existingUnavailableDays ?? []
   );
-  const [images, setImages] = useState(existingImages || []);
-  const [includes, setIncludes] = useState(existingIncludes || []);
-  const [requirements, setRequirements] = useState(existingRequirements || []);
-  const [notes, setNotes] = useState(existingNotes || "");
-  const [promo, setPromo] = useState(existingPromo || false);
-  const [withoutPromoPrice, setWithoutPromoPrice] = useState(
-    existingPromoPrice || 0
+  const [schedule, setSchedule] = useState(existingSchedule ?? []);
+  const [name, setName] = useState(existingName ?? "");
+  const [subtitle, setSubtitle] = useState(existingSubtitle ?? "");
+  const [description, setDescription] = useState(existingDescription ?? "");
+  const [duration, setDuration] = useState(existingDuration ?? null);
+  const [childrenPriceUSD, setChildrenPriceUSD] = useState(
+    existingPrice?.usd?.childrenPrice ?? null
+  );
+  const [childrenPriceMXN, setChildrenPriceMXN] = useState(
+    existingPrice?.mxn?.childrenPrice ?? null
+  );
+  const [adultsPriceUSD, setAdultsPriceUSD] = useState(
+    existingPrice?.usd?.adultsPrice ?? null
+  );
+  const [adultsPriceMXN, setAdultsPriceMXN] = useState(
+    existingPrice?.mxn?.adultsPrice ?? null
+  );
+  const [reservation, setReservation] = useState(existingReservation ?? false);
+  const [childrenReservationPriceUSD, setChildrenReservationPriceUSD] =
+    useState(existingPrice?.usd?.childrenReservationPrice ?? null);
+  const [childrenReservationPriceMXN, setChildrenReservationPriceMXN] =
+    useState(existingPrice?.mxn?.childrenReservationPrice ?? null);
+  const [adultsReservationPriceUSD, setAdultsReservationPriceUSD] = useState(
+    existingPrice?.usd?.adultsReservationPrice ?? null
+  );
+  const [adultsReservationPriceMXN, setAdultsReservationPriceMXN] = useState(
+    existingPrice?.mxn?.adultsReservationPrice ?? null
+  );
+  const [images, setImages] = useState(existingImages ?? []);
+  const [includes, setIncludes] = useState(existingIncludes ?? []);
+  const [doesntIncludes, setDoesntIncludes] = useState(existingIncludes ?? []);
+  const [requirements, setRequirements] = useState(existingRequirements ?? []);
+  const [notes, setNotes] = useState(existingNotes ?? "");
+  const [promo, setPromo] = useState(existingPromo ?? false);
+  const [withoutPromoPriceUSD, setWithoutPromoPriceUSD] = useState(
+    existingPrice?.usd?.withoutPromoAdultsPrice ?? null
+  );
+  const [withoutPromoPriceMXN, setWithoutPromoPriceMXN] = useState(
+    existingPrice?.mxn?.withoutPromoAdultsPrice ?? null
   );
 
   const [goToTours, setGoToTours] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  // const [categories, setCategories] = useState([]);
   const router = useRouter();
+
+  function checkRequiredFields() {
+    const requiredFields = [
+      { name: "Nombre del Tour", value: name },
+      { name: "Duración del Tour", value: duration },
+      {
+        name: "Precio de Adultos en USD o MXN",
+        value: adultsPriceUSD || adultsPriceMXN,
+      },
+      {
+        name: "Precio de Niños en USD o MXN",
+        value: childrenPriceUSD || childrenPriceMXN,
+      },
+    ];
+
+    // Check if reservation is selected, then check reservation prices in USD or MXN
+    if (reservation) {
+      const hasAdultsReservationPrice =
+        adultsReservationPriceUSD || adultsReservationPriceMXN;
+      const hasChildrenReservationPrice =
+        childrenReservationPriceUSD || childrenReservationPriceMXN;
+
+      if (!hasAdultsReservationPrice && !hasChildrenReservationPrice) {
+        requiredFields.push({
+          name: "Precio de la reserva para adultos y/o niños en USD o MXN",
+          value: false,
+        });
+      }
+    }
+
+    // Check if promo is selected, then check promo prices in USD or MXN
+    if (promo) {
+      const hasWithoutPromoPrice = withoutPromoPriceUSD || withoutPromoPriceMXN;
+
+      if (!hasWithoutPromoPrice) {
+        requiredFields.push({
+          name: "Precio anterior para PROMO en USD o MXN",
+          value: false,
+        });
+      }
+    }
+
+    const emptyFields = requiredFields.filter((field) => !field.value);
+
+    if (emptyFields.length > 0) {
+      MySwal.fire({
+        icon: "warning",
+        title: "Campos obligatorios incompletos",
+        html: `Los siguientes campos son obligatorios:<br/>${emptyFields
+          .map((field) => `- ${field.name}`)
+          .join("<br/>")}`,
+      });
+      return false;
+    }
+
+    return true;
+  }
+
   async function saveTour(ev) {
     ev.preventDefault();
+
+    // Check if required fields are completed
+    const isValid = checkRequiredFields();
+
+    if (!isValid) {
+      return;
+    }
+
     const data = {
       name,
       subtitle,
       description,
       duration,
-      price,
       reservation,
-      reservationPrice,
+      price: {
+        usd: {
+          adultsPrice: parseFloat(adultsPriceUSD),
+          childrenPrice: parseFloat(childrenPriceUSD),
+          adultsReservationPrice: parseFloat(adultsReservationPriceUSD),
+          childrenReservationPrice: parseFloat(childrenReservationPriceUSD),
+          withoutPromoAdultsPrice: parseFloat(withoutPromoPriceUSD),
+        },
+        mxn: {
+          adultsPrice: parseFloat(adultsPriceMXN),
+          childrenPrice: parseFloat(childrenPriceMXN),
+          adultsReservationPrice: parseFloat(adultsReservationPriceMXN),
+          childrenReservationPrice: parseFloat(childrenReservationPriceMXN),
+          withoutPromoAdultsPrice: parseFloat(withoutPromoPriceMXN),
+        },
+      },
       images,
       includes,
+      doesntIncludes,
       requirements,
       notes,
       promo,
-      withoutPromoPrice,
-      // category,
-      // properties: tourProperties,
+      unavailableDays,
+      schedule,
     };
+
     console.log(data);
     if (_id) {
-      //update
-      await axios.put("/api/tours", { ...data, _id });
+      // Update existing tour
+      try {
+        await axios.put("/api/tours", { ...data, _id });
+        setGoToTours(true);
+      } catch (error) {
+        handleServerError(error);
+      }
     } else {
-      //create
-      await axios.post("/api/tours", data);
+      // Create a new tour
+      try {
+        await axios.post("/api/tours", data);
+        setGoToTours(true);
+      } catch (error) {
+        handleServerError(error);
+      }
     }
-    setGoToTours(true);
+  }
+
+  async function handleServerError(error) {
+    if (error.response && error.response.status === 500) {
+      MySwal.fire({
+        icon: "question",
+        title: "Error 500 - Información no encontrada en el servidor",
+        text: "Por favor, ponerse en contacto con los administradores :/",
+      });
+    } else {
+      // Handle other types of errors or display a generic error message.
+      MySwal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ha ocurrido un error en el servidor. Por favor, intenta nuevamente.",
+      });
+    }
   }
   if (goToTours) {
     router.push("/tours");
@@ -107,6 +241,18 @@ export default function TourForm({
     });
   }
 
+  function addDoesntIncludes() {
+    setDoesntIncludes((prev) => [...prev, ""]);
+  }
+
+  function removeDoesntIncludes(indexToRemove) {
+    setDoesntIncludes((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
   function addRequirements() {
     setRequirements((prev) => [...prev, ""]);
   }
@@ -131,6 +277,33 @@ export default function TourForm({
     });
   }
 
+  function addSchedule() {
+    setSchedule((prev) => [...prev, ""]);
+  }
+
+  function removeSchedule(indexToRemove) {
+    setSchedule((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  const handleCheckboxChange = (ev) => {
+    const value = parseInt(ev.target.value);
+    const updatedUnavailableDays = [...unavailableDays];
+
+    if (updatedUnavailableDays.includes(value)) {
+      const index = updatedUnavailableDays.indexOf(value);
+      if (index !== -1) {
+        updatedUnavailableDays.splice(index, 1);
+      }
+    } else {
+      updatedUnavailableDays.push(value);
+    }
+    setUnavailableDays(updatedUnavailableDays);
+  };
+
   return (
     <form onSubmit={saveTour}>
       <label>Nombre del tour</label>
@@ -152,40 +325,14 @@ export default function TourForm({
         value={description}
         onChange={(ev) => setDescription(ev.target.value)}
       />
-      {/* <label>Categoría</label>
-      <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
-        <option value="">Sin categoría</option>
-        {categories.length > 0 &&
-          categories.map((c) => (
-            <option key={c._id} value={c._id}>
-              {c.name}
-            </option>
-          ))}
-      </select> */}
-      {/* {propertiesToFill.length > 0 &&
-        propertiesToFill.map((p) => (
-          <div key={p.name} className="">
-            <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
-            <div>
-              <h2
-                value={tourProperties[p.name]}
-                onChange={(ev) => setTourProp(p.name, ev.target.value)}
-              >
-                {p.values.map((v) => (
-                  <div key={v}>
-                    <label>{v}</label>
-                    <input type="checkbox" key={v} value={v} />
-                  </div>
-                ))}
-              </h2>
-            </div>
-          </div>
-        ))} */}
-      <label>Duración (cantidad de horas)</label>
+      <label>Duración </label>
       <input
         type="number"
+        placeholder="cantidad de horas"
         value={duration}
-        onChange={(ev) => setDuration(ev.target.value)}
+        onChange={(ev) => setDuration(Math.max(1, ev.target.value))}
+        onWheel={(ev) => ev.preventDefault()}
+        min={1} // Agregamos esta línea para evitar números negativos o 0
       />
       <label>¿Se puede reservar?</label>
       <div className="flex">
@@ -209,18 +356,44 @@ export default function TourForm({
       <div></div>
       {reservation === true ? (
         <div>
-          <label>Precio de la reserva (en USD)</label>
+          <label>Precio de la reserva para adultos</label>
           <input
             type="number"
-            placeholder="precio"
-            value={reservationPrice}
-            onChange={(ev) => setReservationPrice(ev.target.value)}
+            placeholder="Precio reserva en USD"
+            value={adultsReservationPriceUSD}
+            onChange={(ev) => setAdultsReservationPriceUSD(ev.target.value)}
+            onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
+          />
+          <input
+            type="number"
+            placeholder="Precio reserva en MXN"
+            value={adultsReservationPriceMXN}
+            onChange={(ev) => setAdultsReservationPriceMXN(ev.target.value)}
+            onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
+          />
+          <label>Precio de la reserva para niños</label>
+          <input
+            type="number"
+            placeholder="Precio reserva para niños en USD"
+            value={childrenReservationPriceUSD}
+            onChange={(ev) => setChildrenReservationPriceUSD(ev.target.value)}
+            onWheel={(ev) => ev.preventDefault()}
+            min={0} // Agregamos esta línea para evitar números negativos o 0
+          />
+          <input
+            type="number"
+            placeholder="Precio reserva para niños en MXN"
+            value={childrenReservationPriceMXN}
+            onChange={(ev) => setChildrenReservationPriceMXN(ev.target.value)}
+            onWheel={(ev) => ev.preventDefault()}
+            min={0} // Agregamos esta línea para evitar números negativos o 0
           />
         </div>
       ) : (
         <div></div>
       )}
-
       <label>Fotos</label>
       <div className="mb-2 flex flex-wrap gap-1">
         <ReactSortable
@@ -279,10 +452,39 @@ export default function TourForm({
                   newIncludes[index] = ev.target.value;
                   setIncludes(newIncludes);
                 }}
-                placeholder="Nombre de include"
+                placeholder="Item a incluir"
               />
               <button
                 onClick={() => removeIncludes(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+        <div>
+          <label>¿Qué no incluye?</label>
+          <button onClick={addDoesntIncludes} type="button">
+            Añadir
+          </button>
+        </div>
+        {doesntIncludes.length > 0 &&
+          doesntIncludes.map((doesntInclude, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={doesntInclude}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newDoesntIncludes = [...doesntIncludes];
+                  newDoesntIncludes[index] = ev.target.value;
+                  setDoesntIncludes(newDoesntIncludes);
+                }}
+                placeholder="Nombre de no incluye"
+              />
+              <button
+                onClick={() => removeDoesntIncludes(index)}
                 type="button"
                 className="btn-red"
               >
@@ -308,7 +510,7 @@ export default function TourForm({
                   newRequirement[index] = ev.target.value;
                   setRequirements(newRequirement);
                 }}
-                placeholder="Requiere?"
+                placeholder="qué requiere?"
               />
               <button
                 onClick={() => removeRequirements(index)}
@@ -320,7 +522,6 @@ export default function TourForm({
             </div>
           ))}
       </div>
-
       <div className="mb-2">
         <label>Notas</label>
         <button onClick={addNote} type="button">
@@ -350,7 +551,96 @@ export default function TourForm({
             </div>
           ))}
       </div>
-
+      <div>
+        <label>¿Qué días no está disponible?</label>
+      </div>
+      <div>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={0}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(0)}
+        />
+        <label>Domingo</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={1}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(1)}
+        />
+        <label>Lunes</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={2}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(2)}
+        />
+        <label>Martes</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={3}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(3)}
+        />
+        <label>Miércoles</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={4}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(4)}
+        />
+        <label>Jueves</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={5}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(5)}
+        />
+        <label>Viernes</label>
+        <input
+          name="unavailableDays"
+          type="checkbox"
+          value={6}
+          onChange={handleCheckboxChange}
+          checked={unavailableDays.includes(6)}
+        />
+        <label>Sábado</label>
+      </div>
+      <div className="mb-2">
+        <label>¿En qué horarios está disponible?</label>
+        <button onClick={addSchedule} type="button">
+          Añadir
+        </button>
+        {schedule.length > 0 &&
+          schedule.map((time, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="time"
+                value={time}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newTime = [...schedule];
+                  newTime[index] = ev.target.value;
+                  setSchedule(newTime);
+                }}
+                placeholder="Añadir horario disponible"
+              />
+              <button
+                onClick={() => removeSchedule(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
       <label>¿Tiene promo?</label>
       <label>
         <input
@@ -373,24 +663,60 @@ export default function TourForm({
       <div></div>
       {promo === true ? (
         <div>
-          <label>Precio anterior (en USD)</label>
+          <label>Precio anterior</label>
           <input
             type="number"
-            placeholder="precio"
-            value={withoutPromoPrice}
-            onChange={(ev) => setWithoutPromoPrice(ev.target.value)}
+            placeholder="Precio en USD"
+            value={withoutPromoPriceUSD}
+            onChange={(ev) => setWithoutPromoPriceUSD(ev.target.value)}
+            onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
+          />
+          <input
+            type="number"
+            placeholder="Precio en MXN"
+            value={withoutPromoPriceMXN}
+            onChange={(ev) => setWithoutPromoPriceMXN(ev.target.value)}
+            onWheel={(ev) => ev.preventDefault()}
+            min={1} // Agregamos esta línea para evitar números negativos o 0
           />
         </div>
       ) : (
         <div></div>
       )}
-
-      <label>Precio del tour (en USD)</label>
+      <label>Precio del tour para adultos</label>
       <input
         type="number"
-        placeholder="price"
-        value={price}
-        onChange={(ev) => setPrice(ev.target.value)}
+        placeholder="Precio en USD"
+        value={adultsPriceUSD}
+        onChange={(ev) => setAdultsPriceUSD(Math.max(1, ev.target.value))}
+        onWheel={(ev) => ev.preventDefault()}
+        min={1} // Agregamos esta línea para evitar números negativos o 0
+      />
+      <input
+        type="number"
+        placeholder="Precio en MXN"
+        value={adultsPriceMXN}
+        onChange={(ev) => setAdultsPriceMXN(Math.max(1, ev.target.value))}
+        onWheel={(ev) => ev.preventDefault()}
+        min={1} // Agregamos esta línea para evitar números negativos o 0
+      />
+      <label>Precio del tour para niños</label>
+      <input
+        type="number"
+        placeholder="Precio en USD"
+        value={childrenPriceUSD}
+        onChange={(ev) => setChildrenPriceUSD(ev.target.value)}
+        onWheel={(ev) => ev.preventDefault()}
+        min={0} // Agregamos esta línea para evitar números negativos o 0
+      />
+      <input
+        type="number"
+        placeholder="Precio en MXN"
+        value={childrenPriceMXN}
+        onChange={(ev) => setChildrenPriceMXN(ev.target.value)}
+        onWheel={(ev) => ev.preventDefault()}
+        min={0} // Agregamos esta línea para evitar números negativos o 0
       />
       <button type="submit" className="btn-primary">
         Guardar
