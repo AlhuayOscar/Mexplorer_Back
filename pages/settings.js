@@ -345,7 +345,7 @@ const Settings = () => {
               className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
             />
             {/* Contenedor para el subidor de videos mp4 */}
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <label
                 htmlFor="videoInput"
                 className="block font-medium text-gray-700"
@@ -360,10 +360,17 @@ const Settings = () => {
                 multiple
                 className="mt-2"
               />
-            </div>
+              <button
+                type="button"
+                onClick={handleUploadButtonClick}
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mt-2"
+              >
+                Subir video mp4
+              </button>
+            </div> */}
 
             {/* Listado de los últimos videos subidos */}
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <h2 className="text-xl font-bold mb-2">
                 Últimos videos subidos:
               </h2>
@@ -385,7 +392,7 @@ const Settings = () => {
               ) : (
                 <p>No hay información en el historial local.</p>
               )}
-            </div>
+            </div> */}
             <button
               type="button"
               onClick={handleAddNewUrl}
