@@ -4,6 +4,10 @@ import Link from "next/link.js";
 import axios from "axios";
 import CustomPagination from "../components/Pagination.js";
 import GridLoader from "react-spinners/GridLoader";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const ITEMS_PER_PAGE = 15;
 
@@ -12,11 +16,26 @@ export default function Blogs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    axios.get("/api/blogs").then((response) => {
-      setBlogs(response.data);
-      setLoading(false);
+  // Función para manejar errores al cargar los blogs
+  const handleLoadError = (error) => {
+    console.error("Error al cargar los blogs:", error);
+
+    // Mostrar SweetAlert con el mensaje de error
+    MySwal.fire({
+      icon: "error",
+      title: "Hubo un error al buscar la información de los blogs.",
+      text: "Por favor, contacte al Administrador o al Soporte.",
     });
+  };
+
+  useEffect(() => {
+    axios
+      .get("/api/blogs")
+      .then((response) => {
+        setBlogs(response.data);
+        setLoading(false);
+      })
+      .catch(handleLoadError); // Utilizamos la función handleLoadError en el catch
   }, []);
 
   const handlePageChange = (pageNumber) => {
@@ -47,7 +66,10 @@ export default function Blogs() {
           {/* GridLoader que se muestra mientras se cargan los blogs */}
           {loading ? (
             <tr>
-              <td colSpan="2" className="flex justify-center items-center h-screen w-screen">
+              <td
+                colSpan="2"
+                className="flex justify-center items-center h-screen w-screen"
+              >
                 <GridLoader
                   loading={loading}
                   size={45}

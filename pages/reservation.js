@@ -3,6 +3,10 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import CustomPagination from "../components/Pagination.js";
 import GridLoader from "react-spinners/GridLoader";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const ITEMS_PER_PAGE = 15;
 
@@ -11,11 +15,26 @@ export default function OrdersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    axios.get("/api/orders").then((response) => {
-      setOrders(response.data);
-      setLoading(false);
+  // Función para manejar errores al cargar las reservas
+  const handleLoadError = (error) => {
+    console.error("Error al cargar las reservas:", error);
+
+    // Mostrar SweetAlert con el mensaje de error
+    MySwal.fire({
+      icon: "error",
+      title: "Hubo un error al buscar la información de las reservas.",
+      text: "Por favor, contacte al Administrador o al Soporte.",
     });
+  };
+
+  useEffect(() => {
+    axios
+      .get("/api/orders")
+      .then((response) => {
+        setOrders(response.data);
+        setLoading(false);
+      })
+      .catch(handleLoadError); // Utilizamos la función handleLoadError en el catch
   }, []);
 
   const handlePageChange = (pageNumber) => {

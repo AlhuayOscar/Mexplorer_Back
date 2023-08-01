@@ -33,6 +33,7 @@ const Settings = () => {
     setErrorMessage("");
     setSuccessMessage("");
   };
+
   // Function to check if any URL or Nick input is filled
   const hasUrlsAndNick = () => {
     return urlData.length > 0 || (newUrl.url.trim() && newUrl.nick.trim());
@@ -76,7 +77,20 @@ const Settings = () => {
 
       setTimeout(clearMessages, 3500); // Clear the success message after 2.5 seconds
     } catch (error) {
-      // Error handling
+      // Handle error with SweetAlert
+      Swal.fire({
+        title: "Error",
+        text: "Hubo un error al guardar los cambios.",
+        icon: "error",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#3085d6",
+      });
+
+      // Reset the button text to "Subir Cambios" after an error
+      setSaveButtonText("Subir cambios");
+
+      // Clear the error message after 3.5 seconds
+      setTimeout(clearMessages, 3500);
     }
   };
 
@@ -87,7 +101,9 @@ const Settings = () => {
   const handleNewNickChange = (e) => {
     setNewUrl({ ...newUrl, nick: e.target.value });
   };
-
+  const handleCompanyLabelClick = (company) => {
+    setNewUrl({ ...newUrl, nick: company });
+  };
   const handleAddNewUrl = () => {
     // Check if both URL and Nick inputs are empty or have only spaces
     if (!newUrl.url.trim() || !newUrl.nick.trim()) {
@@ -219,7 +235,36 @@ const Settings = () => {
                 </tbody>
               </table>
             </div>
-
+            <div className="flex space-x-4 mb-2">
+              <label
+                className="px-2 py-1 cursor-pointer"
+                style={getCompanyStyle("Instagram")}
+                onClick={() => handleCompanyLabelClick("Instagram")}
+              >
+                Instagram
+              </label>
+              <label
+                className="px-2 py-1 cursor-pointer"
+                style={getCompanyStyle("Facebook")}
+                onClick={() => handleCompanyLabelClick("Facebook")}
+              >
+                Facebook
+              </label>
+              <label
+                className="px-2 py-1 cursor-pointer"
+                style={getCompanyStyle("Trip")}
+                onClick={() => handleCompanyLabelClick("Trip")}
+              >
+                TripAdvisor
+              </label>
+              <label
+                className="px-2 py-1 cursor-pointer"
+                style={getCompanyStyle("Portada")}
+                onClick={() => handleCompanyLabelClick("Portada")}
+              >
+                Videos de Página principal
+              </label>
+            </div>
             <input
               type="text"
               value={newUrl.url}

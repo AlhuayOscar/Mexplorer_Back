@@ -5,6 +5,10 @@ import Layout from "@/components/Layout";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Review } from "@/models/Review";
 import CustomPagination from "@/components/Pagination";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
 
 const ITEMS_PER_PAGE = 15;
 
@@ -17,6 +21,18 @@ export default function DeleteReview({ review }) {
 
   const limitedReviews = reviews.slice(0, 3);
 
+  // Función para manejar errores al cargar las reviews
+  const handleLoadError = (error) => {
+    console.error("Error al cargar las reviews:", error);
+
+    // Mostrar SweetAlert con el mensaje de error
+    MySwal.fire({
+      icon: "error",
+      title: "Hubo un error al buscar la información de las reseñas. ",
+      text: "Por favor, contacte al Administrador o al Soporte.",
+    });
+  };
+
   // Todas las reviews
   const loadReviews = () => {
     axios
@@ -25,22 +41,26 @@ export default function DeleteReview({ review }) {
         setReviews(response.data);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error al cargar las reviews:", error);
-        setLoading(false);
-      });
+      .catch(handleLoadError); // Utilizamos la función handleLoadError en el catch
   };
 
   // Eliminar una review específica
   const handleEliminarRevision = async (reviewId) => {
     try {
-      await axios.delete(`/api/reviews?id=${reviewId}`);
+      await axios.delete(`/pi/reviews?id=${reviewId}`);
       // Actualizar el estado local
       setReviews((prevReviews) =>
         prevReviews.filter((review) => review._id !== reviewId)
       );
     } catch (error) {
       console.error("Error al eliminar la review:", error);
+
+      // Mostrar SweetAlert con el mensaje de error
+      MySwal.fire({
+        icon: "error",
+        title: "Hubo un error al eliminar la reseña ",
+        text: `Está es la reseña: "${reviewId}" Porfavor, contacte al Administrador o al Soporte.`,
+      });
     }
   };
 
