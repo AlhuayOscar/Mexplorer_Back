@@ -17,6 +17,7 @@ import {
 import { Doughnut, Bar, Line } from "react-chartjs-2";
 import { chartColors, backgroundColors } from "./api/graphSettings.js";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 ChartJS.register(
   ArcElement,
@@ -44,128 +45,176 @@ export default function Home() {
 
   useEffect(() => {
     if (session) {
-      axios
-        .get("/api/tours")
-        .then((response) => {
-          setTourData(response.data);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching tour data:", error);
+      try {
+        axios
+          .get("/api/tours")
+          .then((response) => {
+            setTourData(response.data);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.error(
+              "Error buscando la ruta de información de los tours:",
+              error
+            );
+            setIsLoading(false);
+            Swal.fire({
+              icon: "warning",
+              title: "Error buscando la ruta de información de los tours:",
+              text: "Por favor, contacte al Administrador o al Soporte.",
+            });
+          });
+      } catch (error) {
+        console.error("Error fetching tour data:", error);
+        setIsLoading(false);
+        Swal.fire({
+          icon: "warning",
+          title: "Error fetching tour data",
+          text: "Por favor, contacte al Soporte.",
         });
+      }
     }
   }, [session]);
 
   useEffect(() => {
-    axios
-      .get("/api/orders")
-      .then((response) => {
-        let count = 0;
-        const names = [];
-        const nameCounts = {};
+    try {
+      axios
+        .get("/api/orders")
+        .then((response) => {
+          let count = 0;
+          const names = [];
+          const nameCounts = {};
 
-        for (let index = 0; index < response.data.length; index++) {
-          if (
-            response.data[index].line_items &&
-            response.data[index].line_items[0] &&
-            response.data[index].line_items[0].price_data &&
-            response.data[index].line_items[0].price_data.product_data &&
-            response.data[index].line_items[0].price_data.product_data.name
-          ) {
-            const productName =
-              response.data[index].line_items[0].price_data.product_data.name;
-            names.push(productName);
-            if (nameCounts[productName]) {
-              nameCounts[productName] += 1;
-            } else {
-              nameCounts[productName] = 1;
+          for (let index = 0; index < response.data.length; index++) {
+            if (
+              response.data[index].line_items &&
+              response.data[index].line_items[0] &&
+              response.data[index].line_items[0].price_data &&
+              response.data[index].line_items[0].price_data.product_data &&
+              response.data[index].line_items[0].price_data.product_data.name
+            ) {
+              const productName =
+                response.data[index].line_items[0].price_data.product_data.name;
+              names.push(productName);
+              if (nameCounts[productName]) {
+                nameCounts[productName] += 1;
+              } else {
+                nameCounts[productName] = 1;
+              }
+              count++;
             }
-            count++;
           }
-        }
 
-        let maxCount = 0;
-        let mostFrequentName = "";
-        for (const name in nameCounts) {
-          if (nameCounts[name] > maxCount) {
-            maxCount = nameCounts[name];
-            mostFrequentName = name;
+          let maxCount = 0;
+          let mostFrequentName = "";
+          for (const name in nameCounts) {
+            if (nameCounts[name] > maxCount) {
+              maxCount = nameCounts[name];
+              mostFrequentName = name;
+            }
           }
-        }
-        let modifiedName = mostFrequentName.replace(
-          /(t[o0]+u[r0]+|Tour\s*[aA]\s*)/g,
-          ""
-        );
-        modifiedName = modifiedName.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) =>
-          match.toUpperCase()
-        );
-        setProductNames([modifiedName.trim()]);
-      })
-      .catch((error) => {
-        console.error("Acá la erraste pibe:", error);
+          let modifiedName = mostFrequentName.replace(
+            /(t[o0]+u[r0]+|Tour\s*[aA]\s*)/g,
+            ""
+          );
+          modifiedName = modifiedName.replace(
+            /(^\w{1})|(\s{1}\w{1})/g,
+            (match) => match.toUpperCase()
+          );
+          setProductNames([modifiedName.trim()]);
+        })
+        .catch((error) => {
+          console.error("Mucho cuidado por acá:", error);
+          Swal.fire({
+            icon: "warning",
+            title: "Error realizando 'Fetching' a la información de ordenes",
+            text: "Por favor, contacte al Administrador o al Soporte.",
+          });
+        });
+    } catch (error) {
+      console.error("Mucho cuidado por acá:", error);
+      Swal.fire({
+        icon: "warning",
+        title: "Error realizando 'Fetching' a la información de ordenes",
+        text: "Por favor, contacte al Administrador o al Soporte.",
       });
+    }
   }, []);
 
   useEffect(() => {
-    axios
-      .get("/api/orders")
-      .then((response) => {
-        const valueMonths = [];
-        const ordersMonth = new Array(12).fill(null);
+    try {
+      axios
+        .get("/api/orders")
+        .then((response) => {
+          const valueMonths = [];
+          const ordersMonth = new Array(12).fill(null);
 
-        for (let index = 0; index < response.data.length; index++) {
-          if (
-            response.data[index].line_items &&
-            response.data[index].createdAt
-          ) {
-            const lineItems = response.data[index].line_items;
-            const createdAt = response.data[index].createdAt;
-            const month = new Date(createdAt).getMonth();
+          for (let index = 0; index < response.data.length; index++) {
+            if (
+              response.data[index].line_items &&
+              response.data[index].createdAt
+            ) {
+              const lineItems = response.data[index].line_items;
+              const createdAt = response.data[index].createdAt;
+              const month = new Date(createdAt).getMonth();
 
-            let totalValue = 0;
+              let totalValue = 0;
 
-            for (let i = 0; i < lineItems.length; i++) {
-              if (
-                lineItems[i].price_data &&
-                lineItems[i].price_data.unit_amount
-              ) {
-                const unitAmountString = lineItems[i].price_data.unit_amount;
-                const unitAmount = Number(unitAmountString);
-                totalValue += unitAmount;
+              for (let i = 0; i < lineItems.length; i++) {
+                if (
+                  lineItems[i].price_data &&
+                  lineItems[i].price_data.unit_amount
+                ) {
+                  const unitAmountString = lineItems[i].price_data.unit_amount;
+                  const unitAmount = Number(unitAmountString);
+                  totalValue += unitAmount;
+                }
+              }
+
+              if (valueMonths[month]) {
+                valueMonths[month] += totalValue;
+              } else {
+                valueMonths[month] = totalValue;
+              }
+
+              if (ordersMonth[month]) {
+                ordersMonth[month] += 1;
+              } else {
+                ordersMonth[month] = 1;
               }
             }
-
-            if (valueMonths[month]) {
-              valueMonths[month] += totalValue;
-            } else {
-              valueMonths[month] = totalValue;
-            }
-
-            if (ordersMonth[month]) {
-              ordersMonth[month] += 1;
-            } else {
-              ordersMonth[month] = 1;
-            }
           }
-        }
 
-        const formattedValueMonths = valueMonths.map((value) => {
-          const formattedValue = (value / 100).toFixed(2).replace(".", ",");
-          return formattedValue;
+          const formattedValueMonths = valueMonths.map((value) => {
+            const formattedValue = (value / 100).toFixed(2).replace(".", ",");
+            return formattedValue;
+          });
+
+          const filteredValueMonths = formattedValueMonths.filter(
+            (value) => value !== undefined
+          );
+          const filteredOrdersMonth = ordersMonth.filter(
+            (value) => value !== undefined
+          );
+          setFilteredValueMonths(filteredValueMonths);
+          setFilteredOrdersMonth(filteredOrdersMonth);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "warning",
+            title: "Error encontrando la ruta de información de ordenes",
+            text: "Por favor, contacte al Administrador o al Soporte.",
+          });
         });
-
-        const filteredValueMonths = formattedValueMonths.filter(
-          (value) => value !== undefined
-        );
-        const filteredOrdersMonth = ordersMonth.filter(
-          (value) => value !== undefined
-        );
-        setFilteredValueMonths(filteredValueMonths);
-        setFilteredOrdersMonth(filteredOrdersMonth);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    } catch (error) {
+      console.error("Error:", error);
+      Swal.fire({
+        icon: "warning",
+        title: "Error encontrando la ruta de información de ordenes",
+        text: "Por favor, contacte al Administrador o al Soporte.",
       });
+    }
   }, []);
 
   useEffect(() => {
