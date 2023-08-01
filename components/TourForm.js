@@ -5,6 +5,7 @@ import Spinner from "@/components/Spinner";
 import { ReactSortable } from "react-sortablejs";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Link from "next/link";
 const MySwal = withReactContent(Swal);
 
 export default function TourForm({
@@ -303,7 +304,10 @@ export default function TourForm({
     }
     setUnavailableDays(updatedUnavailableDays);
   };
-
+  function handleCancel() {
+    // Use the router object to go back to the previous page
+    router.back();
+  }
   return (
     <form onSubmit={saveTour}>
       <label>Nombre del tour</label>
@@ -718,9 +722,14 @@ export default function TourForm({
         onWheel={(ev) => ev.preventDefault()}
         min={0} // Agregamos esta línea para evitar números negativos o 0
       />
-      <button type="submit" className="btn-primary">
-        Guardar
-      </button>
+      <div className="flex items-center justify-end gap-5">
+        <button type="button" onClick={handleCancel} className="btn-default">
+          Cancelar
+        </button>
+        <button type="submit" className="btn-primary">
+          Guardar
+        </button>
+      </div>
     </form>
   );
 }
