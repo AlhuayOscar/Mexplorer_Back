@@ -42,6 +42,6 @@ export async function isAdminRequest(req, res) {
       title: "Error",
       text: "No estás autorizado para ingresar aún.",
     });
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Error del servidor" });
   }
 }
