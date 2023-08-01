@@ -72,7 +72,7 @@ export default function OrdersPage() {
                     </td>
                   </>
                 ) : (
-                  <td colSpan="6">Empty row</td>
+                  <td colSpan="6">Información no disponible</td>
                 )}
               </tr>
             ))}

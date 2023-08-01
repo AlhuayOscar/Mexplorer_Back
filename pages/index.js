@@ -37,10 +37,11 @@ export default function Home() {
   const [reservedToursCount, setReservedToursCount] = useState(0);
   const [unreservedToursCount, setUnreservedToursCount] = useState(0);
   const [recentTours, setRecentTours] = useState([]);
-  const [productNames, setProductNames] = useState([]); // Estado para almacenar el array de nombres
+  const [productNames, setProductNames] = useState([]);
   const [valuesByMonth, setValuesByMonth] = useState([]);
   const [filteredValueMonths, setFilteredValueMonths] = useState([]);
   const [filteredOrdersMonth, setFilteredOrdersMonth] = useState([]);
+
   useEffect(() => {
     if (session) {
       axios
@@ -54,13 +55,14 @@ export default function Home() {
         });
     }
   }, [session]);
+
   useEffect(() => {
     axios
       .get("/api/orders")
       .then((response) => {
         let count = 0;
-        const names = []; // Array temporal para almacenar los nombres
-        const nameCounts = {}; // Objeto para almacenar la cuenta de cada nombre
+        const names = [];
+        const nameCounts = {};
 
         for (let index = 0; index < response.data.length; index++) {
           if (
@@ -72,18 +74,16 @@ export default function Home() {
           ) {
             const productName =
               response.data[index].line_items[0].price_data.product_data.name;
-            names.push(productName); // Agregar el nombre al array temporal
-            // Incrementar la cuenta del nombre en el objeto nameCounts
+            names.push(productName);
             if (nameCounts[productName]) {
               nameCounts[productName] += 1;
             } else {
               nameCounts[productName] = 1;
             }
-
             count++;
           }
         }
-        // Encontrar el nombre que aparece más veces
+
         let maxCount = 0;
         let mostFrequentName = "";
         for (const name in nameCounts) {
@@ -95,16 +95,17 @@ export default function Home() {
         let modifiedName = mostFrequentName.replace(
           /(t[o0]+u[r0]+|Tour\s*[aA]\s*)/g,
           ""
-        ); // Eliminar "tour" y variantes, así como la letra "a" después de "tour" (con o sin espacios)
+        );
         modifiedName = modifiedName.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) =>
           match.toUpperCase()
-        ); // Capitalizar la primera letra de cada palabra
-        setProductNames([modifiedName.trim()]); // Actualizar el estado con el nombre modificado y eliminar espacios en blanco
+        );
+        setProductNames([modifiedName.trim()]);
       })
       .catch((error) => {
         console.error("Acá la erraste pibe:", error);
       });
   }, []);
+
   useEffect(() => {
     axios
       .get("/api/orders")
@@ -119,7 +120,7 @@ export default function Home() {
           ) {
             const lineItems = response.data[index].line_items;
             const createdAt = response.data[index].createdAt;
-            const month = new Date(createdAt).getMonth(); // Obtener el mes (0-11)
+            const month = new Date(createdAt).getMonth();
 
             let totalValue = 0;
 
@@ -148,13 +149,11 @@ export default function Home() {
           }
         }
 
-        // Formatear valueMonths agregando una coma antes de los dos últimos caracteres
         const formattedValueMonths = valueMonths.map((value) => {
           const formattedValue = (value / 100).toFixed(2).replace(".", ",");
           return formattedValue;
         });
 
-        // Eliminar los espacios vacíos en los arreglos
         const filteredValueMonths = formattedValueMonths.filter(
           (value) => value !== undefined
         );
@@ -163,14 +162,12 @@ export default function Home() {
         );
         setFilteredValueMonths(filteredValueMonths);
         setFilteredOrdersMonth(filteredOrdersMonth);
-        // Imprimir los arreglos de suma total y cantidad total de órdenes por mes
-
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, []);
-  // Seguimos para los que no son graficos abajo:
+
   useEffect(() => {
     if (!isLoading && tourData.length > 0) {
       const reservedCount = tourData.filter((tour) => tour.reservation).length;
@@ -180,7 +177,6 @@ export default function Home() {
       setReservedToursCount(reservedCount);
       setUnreservedToursCount(unreservedCount);
 
-      // Obtener los tours más recientes y acortar los nombres
       const recentTours = tourData
         .slice(0, 4)
         .map((tour) => tour.name.slice(0, 7));
@@ -218,7 +214,7 @@ export default function Home() {
         borderColor: "rgb(255, 99, 132, 0.5)",
         borderWidth: 2,
         fill: false,
-        data: filteredOrdersMonth, //Acá
+        data: filteredOrdersMonth,
       },
       {
         type: "bar",
@@ -230,10 +226,11 @@ export default function Home() {
       },
     ],
   };
+
   if (isLoading || status === "loading") {
     return (
       <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
-        <img  
+        <img
           src="/mex_logo.png"
           alt="Logo de México"
           className="mt-4 max-w-350px max-h-full animate-fadeIn"
@@ -261,25 +258,23 @@ export default function Home() {
     ],
   };
 
-  const last5Tours = tourData.slice(-5); // Obtenemos los últimos 5 elementos de tourData
-
+  const last5Tours = tourData.slice(-5);
   const uniqueNames = [...new Set(last5Tours.map((tour) => tour.name))];
-
-  const uniquePrices = [
-    ...new Set(last5Tours.map((tour) => tour.price?.usd?.adultsPrice)),
-  ];
+  const uniquePrices = [...new Set(last5Tours.map((tour) => tour.price))];
+  console.log(
+    uniquePrices.map((adultsPrice) => {
+      return (
+        last5Tours.find(
+          (tour) => tour.price && tour.price?.usd?.adultsPrice === adultsPrice
+        )?.price?.usd?.adultsPrice || 0
+      );
+    })
+  );
   const tourPricesData = {
     labels: uniqueNames,
     datasets: [
       {
-        data: uniquePrices.map((adultsPrice) => {
-          return (
-            last5Tours.find(
-              (tour) =>
-                tour.price && tour.price?.usd?.adultsPrice === adultsPrice
-            )?.price?.usd?.adultsPrice || 0
-          );
-        }),
+        data: uniquePrices,
         backgroundColor: backgroundColors.slice(2, 11),
         borderColor: chartColors.slice(2, 11),
         borderWidth: 1,
@@ -303,7 +298,7 @@ export default function Home() {
   };
 
   const barChartData = {
-    labels: recentTours, // Utilizar los tours más recientes y acortados
+    labels: recentTours,
     datasets: [
       {
         label: "Tours más recientes",
@@ -312,9 +307,11 @@ export default function Home() {
       },
     ],
   };
+
   const chartOptions = {
     responsive: true,
   };
+
   return (
     <Layout>
       <div className="text-blue-900 flex justify-between">
@@ -336,7 +333,7 @@ export default function Home() {
           />
         </div>
         <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
-          <h3 className="text-center">Precios de Tours</h3>
+          <h3 className="text-center">Precios de Últimos 5 Tours</h3>
           <Doughnut
             data={tourPricesData}
             options={chartOptions}
