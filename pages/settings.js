@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "../components/Layout.js";
 import Swal from "sweetalert2";
+import GridLoader from "react-spinners/GridLoader";
 
 const Settings = () => {
   const [urlData, setUrlData] = useState([]);
@@ -9,6 +10,7 @@ const Settings = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [saveButtonText, setSaveButtonText] = useState("Subir cambios");
+  const [loading, setLoading] = useState(true);
 
   // Define the array of companies and their associated colors
   const companyColors = {
@@ -46,8 +48,10 @@ const Settings = () => {
           nick: urlName[index],
         }))
       );
+      setLoading(false);
     } catch (error) {
       // Error handling
+      setLoading(false);
     }
   };
 
@@ -140,6 +144,7 @@ const Settings = () => {
       setSaveButtonText("Mantener cambios");
     }
   }, [newUrl]);
+
   return (
     <Layout>
       <div className="p-4">
@@ -154,87 +159,97 @@ const Settings = () => {
             {successMessage}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full">
-              <thead>
-                <tr>
-                  <th className="px-2 py-2">Eliminar</th>
-                  <th className="px-4 py-2">#</th>
-                  <th className="px-4 py-2">Nombre</th>
-                  <th className="px-4 py-2">URL</th>
-                </tr>
-              </thead>
-              <tbody>
-                {urlData.map((data, index) => (
-                  <tr
-                    key={index}
-                    className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                  >
-                    <td className="border px-4 py-2">
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(index)}
-                        className="text-red-500 font-bold"
-                      >
-                        X
-                      </button>
-                    </td>
-                    <td className="border px-4 py-2">{index + 1}</td>
-                    <td
-                      className="border px-4 py-2"
-                      style={getCompanyStyle(data.nick)}
-                    >
-                      {data.nick}
-                    </td>
-                    <td className="border px-4 py-2 max-w-[100px]">
-                      <div
-                        className="overflow-hidden whitespace-nowrap"
-                        style={{
-                          textOverflow: "ellipsis",
-                          WebkitLineClamp: 1, // Agrega esta línea para soporte en navegadores basados en WebKit (por ejemplo, Safari)
-                          display: "-webkit-box", // Agrega esta línea para soporte en navegadores basados en WebKit (por ejemplo, Safari)
-                          WebkitBoxOrient: "vertical", // Agrega esta línea para soporte en navegadores basados en WebKit (por ejemplo, Safari)
-                        }}
-                      >
-                        {data.url}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {loading ? (
+          <div className="flex justify-center items-center h-screen">
+            <GridLoader
+              loading={loading}
+              size={30}
+              color={"rgb(85, 66, 246)"}
+            />
           </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full">
+                <thead>
+                  <tr>
+                    <th className="px-2 py-2">Eliminar</th>
+                    <th className="px-4 py-2">#</th>
+                    <th className="px-4 py-2">Nombre</th>
+                    <th className="px-4 py-2">URL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {urlData.map((data, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                    >
+                      <td className="border px-4 py-2">
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(index)}
+                          className="text-red-500 font-bold"
+                        >
+                          X
+                        </button>
+                      </td>
+                      <td className="border px-4 py-2">{index + 1}</td>
+                      <td
+                        className="border px-4 py-2"
+                        style={getCompanyStyle(data.nick)}
+                      >
+                        {data.nick}
+                      </td>
+                      <td className="border px-4 py-2 max-w-[100px]">
+                        <div
+                          className="overflow-hidden whitespace-nowrap"
+                          style={{
+                            textOverflow: "ellipsis",
+                            WebkitLineClamp: 1,
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                          }}
+                        >
+                          {data.url}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-          <input
-            type="text"
-            value={newUrl.url}
-            onChange={handleNewUrlChange}
-            placeholder="Coloca la URL aquí"
-            className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
-          />
-          <input
-            type="text"
-            value={newUrl.nick}
-            onChange={handleNewNickChange}
-            placeholder="Nombre de la URL"
-            className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
-          />
-          <button
-            type="button"
-            onClick={handleAddNewUrl}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Añadir URL
-          </button>
-          <br />
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            {saveButtonText}
-          </button>
-        </form>
+            <input
+              type="text"
+              value={newUrl.url}
+              onChange={handleNewUrlChange}
+              placeholder="Coloca la URL aquí"
+              className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
+            />
+            <input
+              type="text"
+              value={newUrl.nick}
+              onChange={handleNewNickChange}
+              placeholder="Nombre de la URL"
+              className="border border-gray-300 px-4 py-2 w-full rounded mt-2"
+            />
+            <button
+              type="button"
+              onClick={handleAddNewUrl}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Añadir URL
+            </button>
+            <br />
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              {saveButtonText}
+            </button>
+          </form>
+        )}
       </div>
     </Layout>
   );
