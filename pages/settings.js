@@ -368,7 +368,6 @@ const Settings = () => {
                 Subir video mp4
               </button>
             </div> */}
-
             {/* Listado de los últimos videos subidos */}
             {/* <div className="mt-4">
               <h2 className="text-xl font-bold mb-2">
