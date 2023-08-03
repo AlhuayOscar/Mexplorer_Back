@@ -156,7 +156,6 @@ export default function TourForm({
   async function saveTour(ev) {
     ev.preventDefault();
 
-    // Check if required fields are completed
     const isValid = checkRequiredFields();
 
     if (!isValid) {
