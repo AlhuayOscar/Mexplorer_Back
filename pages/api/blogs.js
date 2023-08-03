@@ -7,7 +7,6 @@ export default async function handle(req, res) {
   const { method } = req;
   await mongooseConnect();
   await isAdminRequest(req, res);
-
   if (method === "GET") {
     try {
       if (req.query?._id) {
@@ -26,7 +25,7 @@ export default async function handle(req, res) {
         title,
         titleEng,
         subtitle,
-        subtitleEng,
+        subtitleEng, 
         description,
         descriptionEng,
         images,
