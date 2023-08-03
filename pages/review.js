@@ -47,7 +47,7 @@ export default function DeleteReview({ review }) {
   // Eliminar una review específica
   const handleEliminarRevision = async (reviewId) => {
     try {
-      await axios.delete(`/pi/reviews?id=${reviewId}`);
+      await axios.delete(`/api/reviews?id=${reviewId}`);
       // Actualizar el estado local
       setReviews((prevReviews) =>
         prevReviews.filter((review) => review._id !== reviewId)

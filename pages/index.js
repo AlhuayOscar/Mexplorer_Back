@@ -282,7 +282,7 @@ export default function Home() {
         <img
           src="/mex_logo.png"
           alt="Logo de México"
-          className="mt-4 max-w-350px max-h-full animate-fadeIn"
+          className="mt-4 max-w-350px min-w-350px max-h-full animate-fadeIn"
         />
         <h1 className="mb-4 text-white">Cargando...</h1>
         <GridLoader
