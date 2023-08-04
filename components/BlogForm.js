@@ -33,7 +33,6 @@ export default function BlogForm({
       date,
       location,
     };
-    console.log(data)
     if (_id) {
       //update
       await axios.put("/api/blogs", { ...data, _id });
