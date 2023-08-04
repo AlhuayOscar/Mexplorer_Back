@@ -1,12 +1,24 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Nav from "@/components/Nav";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "@/components/Logo";
 import GoogleIcon from "@mui/icons-material/Google";
 
 export default function Layout({ children }) {
   const [showNav, setShowNav] = useState(false);
   const { data: session } = useSession();
+
+  // Use useEffect to handle the local storage
+  useEffect(() => {
+    const storedShowNav = localStorage.getItem("showNav");
+    setShowNav(storedShowNav === "true"); // Convert string to boolean
+  }, []);
+
+  // Update local storage whenever showNav changes
+  useEffect(() => {
+    localStorage.setItem("showNav", showNav);
+  }, [showNav]);
+
   if (!session) {
     return (
       <div className="bg-bgGray w-screen h-screen flex items-center">
@@ -34,7 +46,7 @@ export default function Layout({ children }) {
   return (
     <div className="bg-bgGray min-h-screen ">
       <div className="md:hidden flex items-center p-4">
-        <button onClick={() => setShowNav(true)}>
+        <button onClick={() => setShowNav(!showNav)}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
