@@ -11,15 +11,23 @@ const MySwal = withReactContent(Swal);
 export default function TourForm({
   _id,
   name: existingName,
+  nameEng: existingNameEng,
   subtitle: existingSubtitle,
+  subtitleEng: existingSubtitleEng,
   description: existingDescription,
+  descriptionEng: existingDescriptionEng,
   duration: existingDuration,
   reservation: existingReservation,
   images: existingImages,
   includes: existingIncludes,
+  includesEng: existingIncludesEng,
+  doesntIncludes: existingDoesntIncludes,
+  doesntIncludesEng: existingDoesntIncludesEng,
   price: existingPrice,
   requirements: existingRequirements,
+  requirementsEng: existingRequirementsEng,
   notes: existingNotes,
+  notesEng: existingNotesEng,
   promo: existingPromo,
   unavailableDays: existingUnavailableDays,
   schedule: existingSchedule,
@@ -30,8 +38,13 @@ export default function TourForm({
   );
   const [schedule, setSchedule] = useState(existingSchedule ?? []);
   const [name, setName] = useState(existingName ?? "");
+  const [nameEng, setNameEng] = useState(existingNameEng ?? "");
   const [subtitle, setSubtitle] = useState(existingSubtitle ?? "");
+  const [subtitleEng, setSubtitleEng] = useState(existingSubtitleEng ?? "");
   const [description, setDescription] = useState(existingDescription ?? "");
+  const [descriptionEng, setDescriptionEng] = useState(
+    existingDescriptionEng ?? ""
+  );
   const [duration, setDuration] = useState(existingDuration ?? null);
   const [childrenPriceUSD, setChildrenPriceUSD] = useState(
     existingPrice?.usd?.childrenPrice ?? null
@@ -58,9 +71,19 @@ export default function TourForm({
   );
   const [images, setImages] = useState(existingImages ?? []);
   const [includes, setIncludes] = useState(existingIncludes ?? []);
-  const [doesntIncludes, setDoesntIncludes] = useState(existingIncludes ?? []);
+  const [includesEng, setIncludesEng] = useState(existingIncludesEng ?? []);
+  const [doesntIncludes, setDoesntIncludes] = useState(
+    existingDoesntIncludes ?? []
+  );
+  const [doesntIncludesEng, setDoesntIncludesEng] = useState(
+    existingDoesntIncludesEng ?? []
+  );
   const [requirements, setRequirements] = useState(existingRequirements ?? []);
+  const [requirementsEng, setRequirementsEng] = useState(
+    existingRequirementsEng ?? []
+  );
   const [notes, setNotes] = useState(existingNotes ?? "");
+  const [notesEng, setNotesEng] = useState(existingNotesEng ?? "");
   const [promo, setPromo] = useState(existingPromo ?? false);
   const [withoutPromoPriceUSD, setWithoutPromoPriceUSD] = useState(
     existingPrice?.usd?.withoutPromoAdultsPrice ?? null
@@ -133,7 +156,6 @@ export default function TourForm({
   async function saveTour(ev) {
     ev.preventDefault();
 
-    // Check if required fields are completed
     const isValid = checkRequiredFields();
 
     if (!isValid) {
@@ -142,8 +164,11 @@ export default function TourForm({
 
     const data = {
       name,
+      nameEng,
       subtitle,
+      subtitleEng,
       description,
+      descriptionEng,
       duration,
       reservation,
       price: {
@@ -164,9 +189,13 @@ export default function TourForm({
       },
       images,
       includes,
+      includesEng,
       doesntIncludes,
+      doesntIncludesEng,
       requirements,
+      requirementsEng,
       notes,
+      notesEng,
       promo,
       unavailableDays,
       schedule,
@@ -232,9 +261,19 @@ export default function TourForm({
   function addIncludes() {
     setIncludes((prev) => [...prev, ""]);
   }
+  function addIncludesEng() {
+    setIncludesEng((prev) => [...prev, ""]);
+  }
 
   function removeIncludes(indexToRemove) {
     setIncludes((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+  function removeIncludesEng(indexToRemove) {
+    setIncludesEng((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
       });
@@ -245,8 +284,20 @@ export default function TourForm({
     setDoesntIncludes((prev) => [...prev, ""]);
   }
 
+  function addDoesntIncludesEng() {
+    setDoesntIncludesEng((prev) => [...prev, ""]);
+  }
+
   function removeDoesntIncludes(indexToRemove) {
     setDoesntIncludes((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  function removeDoesntIncludesEng(indexToRemove) {
+    setDoesntIncludesEng((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
       });
@@ -257,8 +308,20 @@ export default function TourForm({
     setRequirements((prev) => [...prev, ""]);
   }
 
+  function addRequirementsEng() {
+    setRequirementsEng((prev) => [...prev, ""]);
+  }
+
   function removeRequirements(indexToRemove) {
     setRequirements((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  function removeRequirementsEng(indexToRemove) {
+    setRequirementsEng((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
       });
@@ -269,8 +332,20 @@ export default function TourForm({
     setNotes((prev) => [...prev, ""]);
   }
 
+  function addNoteEng() {
+    setNotesEng((prev) => [...prev, ""]);
+  }
+
   function removeNote(indexToRemove) {
     setNotes((prev) => {
+      return [...prev].filter((p, pIndex) => {
+        return pIndex !== indexToRemove;
+      });
+    });
+  }
+
+  function removeNoteEng(indexToRemove) {
+    setNotesEng((prev) => {
       return [...prev].filter((p, pIndex) => {
         return pIndex !== indexToRemove;
       });
@@ -316,17 +391,36 @@ export default function TourForm({
         value={name}
         onChange={(ev) => setName(ev.target.value)}
       />
+      <label>Nombre del tour en inglés</label>
+      <input
+        type="text"
+        placeholder="Tour name"
+        value={nameEng}
+        onChange={(ev) => setNameEng(ev.target.value)}
+      />
       <label>Pequeña descripción para la tarjeta</label>
       <textarea
         placeholder="Resumen de descripción"
         value={subtitle}
         onChange={(ev) => setSubtitle(ev.target.value)}
       />
+      <label>Pequeña descripción para la tarjeta en inglés</label>
+      <textarea
+        placeholder="A little description"
+        value={subtitleEng}
+        onChange={(ev) => setSubtitleEng(ev.target.value)}
+      />
       <label>Descripción</label>
       <textarea
-        placeholder="description"
+        placeholder="Descripción"
         value={description}
         onChange={(ev) => setDescription(ev.target.value)}
+      />
+      <label>Descripción en inglés</label>
+      <textarea
+        placeholder="Description"
+        value={descriptionEng}
+        onChange={(ev) => setDescriptionEng(ev.target.value)}
       />
       <label>Duración </label>
       <input
@@ -467,6 +561,35 @@ export default function TourForm({
             </div>
           ))}
         <div>
+          <label>¿Qué incluye? (en inglés)</label>
+          <button onClick={addIncludesEng} type="button">
+            Añadir
+          </button>
+          {includesEng.length > 0 &&
+            includesEng.map((includeEng, index) => (
+              <div key={index} className="flex gap-1 mb-2">
+                <input
+                  type="text"
+                  value={includeEng}
+                  className="mb-0"
+                  onChange={(ev) => {
+                    const newIncludesEng = [...includesEng];
+                    newIncludesEng[index] = ev.target.value;
+                    setIncludesEng(newIncludesEng);
+                  }}
+                  placeholder="Item to include"
+                />
+                <button
+                  onClick={() => removeIncludesEng(index)}
+                  type="button"
+                  className="btn-red"
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+        </div>
+        <div>
           <label>¿Qué no incluye?</label>
           <button onClick={addDoesntIncludes} type="button">
             Añadir
@@ -488,6 +611,35 @@ export default function TourForm({
               />
               <button
                 onClick={() => removeDoesntIncludes(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+        <div>
+          <label>¿Qué no incluye? (en inglés)</label>
+          <button onClick={addDoesntIncludesEng} type="button">
+            Añadir
+          </button>
+        </div>
+        {doesntIncludesEng.length > 0 &&
+          doesntIncludesEng.map((doesntIncludeEng, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={doesntIncludeEng}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newDoesntIncludesEng = [...doesntIncludesEng];
+                  newDoesntIncludesEng[index] = ev.target.value;
+                  setDoesntIncludesEng(newDoesntIncludesEng);
+                }}
+                placeholder="Item this tour doesn't includes"
+              />
+              <button
+                onClick={() => removeDoesntIncludesEng(index)}
                 type="button"
                 className="btn-red"
               >
@@ -526,6 +678,35 @@ export default function TourForm({
           ))}
       </div>
       <div className="mb-2">
+        <label>¿Qué requiere? (en inglés)</label>
+        <button onClick={addRequirementsEng} type="button">
+          Añadir
+        </button>
+        {requirementsEng.length > 0 &&
+          requirementsEng.map((requirementEng, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={requirementEng}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newRequirementEng = [...requirementsEng];
+                  newRequirementEng[index] = ev.target.value;
+                  setRequirementsEng(newRequirementEng);
+                }}
+                placeholder="qué requiere?"
+              />
+              <button
+                onClick={() => removeRequirements(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
+      <div className="mb-2">
         <label>Notas</label>
         <button onClick={addNote} type="button">
           Añadir
@@ -546,6 +727,35 @@ export default function TourForm({
               />
               <button
                 onClick={() => removeNote(index)}
+                type="button"
+                className="btn-red"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+      </div>
+      <div className="mb-2">
+        <label>Notas (en inglés)</label>
+        <button onClick={addNoteEng} type="button">
+          Añadir
+        </button>
+        {notesEng.length > 0 &&
+          notesEng.map((noteEng, index) => (
+            <div key={index} className="flex gap-1 mb-2">
+              <input
+                type="text"
+                value={noteEng}
+                className="mb-0"
+                onChange={(ev) => {
+                  const newNoteEng = [...notesEng];
+                  newNoteEng[index] = ev.target.value;
+                  setNotesEng(newNoteEng);
+                }}
+                placeholder="Notas"
+              />
+              <button
+                onClick={() => removeNoteEng(index)}
                 type="button"
                 className="btn-red"
               >

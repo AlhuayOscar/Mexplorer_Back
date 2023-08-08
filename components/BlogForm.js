@@ -7,15 +7,21 @@ import { ReactSortable } from "react-sortablejs";
 export default function BlogForm({
   _id,
   title: existingTitle,
+  titleEng: existingTitleEng,
   subtitle: existingSubtitle,
+  subtitleEng: existingSubtitleEng,
   description: existingDescription,
+  descriptionEng: existingDescriptionEng,
   images: existingImages,
   date: existingDate,
   location: existingLocation,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
+  const [titleEng, setTitleEng] = useState(existingTitleEng || "");
   const [subtitle, setSubtitle] = useState(existingSubtitle || "");
+  const [subtitleEng, setSubtitleEng] = useState(existingSubtitleEng || "");
   const [description, setDescription] = useState(existingDescription || "");
+  const [descriptionEng, setDescriptionEng] = useState(existingDescriptionEng || "");
   const [images, setImages] = useState(existingImages || []);
   const [date, setDate] = useState(existingDate || "");
   const [location, setLocation] = useState(existingLocation || "");
@@ -27,8 +33,11 @@ export default function BlogForm({
     ev.preventDefault();
     const data = {
       title,
+      titleEng,
       subtitle,
+      subtitleEng,
       description,
+      descriptionEng,
       images,
       date,
       location,
@@ -73,6 +82,13 @@ export default function BlogForm({
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
       />
+      <label>Título (en inglés)</label>
+      <input
+        type="text"
+        placeholder="Title"
+        value={titleEng}
+        onChange={(ev) => setTitleEng(ev.target.value)}
+      />
       <label>Subtítulo</label>
       <input
         type="text"
@@ -80,11 +96,24 @@ export default function BlogForm({
         value={subtitle}
         onChange={(ev) => setSubtitle(ev.target.value)}
       />
+      <label>Subtítulo (en inglés)</label>
+      <input
+        type="text"
+        placeholder="Subtitle"
+        value={subtitleEng}
+        onChange={(ev) => setSubtitleEng(ev.target.value)}
+      />
       <label>Cuerpo del artículo</label>
       <textarea
         placeholder="¿Qué querés escribir?"
         value={description}
         onChange={(ev) => setDescription(ev.target.value)}
+      />
+      <label>Cuerpo del artículo (en inglés) </label>
+      <textarea
+        placeholder="What do you want to write?"
+        value={descriptionEng}
+        onChange={(ev) => setDescriptionEng(ev.target.value)}
       />
       
       <label>Fotos</label>
