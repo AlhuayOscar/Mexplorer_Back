@@ -38,7 +38,6 @@ export default function Tours() {
   }, []);
 
   const handlePageChange = (pageNumber) => {
-    a;
     setCurrentPage(pageNumber);
   };
 
