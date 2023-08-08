@@ -17,7 +17,6 @@ export default function TourForm({
   description: existingDescription,
   descriptionEng: existingDescriptionEng,
   duration: existingDuration,
-  reservation: existingReservation,
   images: existingImages,
   includes: existingIncludes,
   includesEng: existingIncludesEng,
@@ -57,17 +56,6 @@ export default function TourForm({
   );
   const [adultsPriceMXN, setAdultsPriceMXN] = useState(
     existingPrice?.mxn?.adultsPrice ?? null
-  );
-  const [reservation, setReservation] = useState(existingReservation ?? false);
-  const [childrenReservationPriceUSD, setChildrenReservationPriceUSD] =
-    useState(existingPrice?.usd?.childrenReservationPrice ?? null);
-  const [childrenReservationPriceMXN, setChildrenReservationPriceMXN] =
-    useState(existingPrice?.mxn?.childrenReservationPrice ?? null);
-  const [adultsReservationPriceUSD, setAdultsReservationPriceUSD] = useState(
-    existingPrice?.usd?.adultsReservationPrice ?? null
-  );
-  const [adultsReservationPriceMXN, setAdultsReservationPriceMXN] = useState(
-    existingPrice?.mxn?.adultsReservationPrice ?? null
   );
   const [images, setImages] = useState(existingImages ?? []);
   const [includes, setIncludes] = useState(existingIncludes ?? []);
@@ -109,21 +97,7 @@ export default function TourForm({
         value: childrenPriceUSD || childrenPriceMXN,
       },
     ];
-
-    // Check if reservation is selected, then check reservation prices in USD or MXN
-    if (reservation) {
-      const hasAdultsReservationPrice =
-        adultsReservationPriceUSD || adultsReservationPriceMXN;
-      const hasChildrenReservationPrice =
-        childrenReservationPriceUSD || childrenReservationPriceMXN;
-
-      if (!hasAdultsReservationPrice && !hasChildrenReservationPrice) {
-        requiredFields.push({
-          name: "Precio de la reserva para adultos y/o niños en USD o MXN",
-          value: false,
-        });
-      }
-    }
+    
 
     // Check if promo is selected, then check promo prices in USD or MXN
     if (promo) {
@@ -170,20 +144,15 @@ export default function TourForm({
       description,
       descriptionEng,
       duration,
-      reservation,
       price: {
         usd: {
           adultsPrice: parseFloat(adultsPriceUSD),
           childrenPrice: parseFloat(childrenPriceUSD),
-          adultsReservationPrice: parseFloat(adultsReservationPriceUSD),
-          childrenReservationPrice: parseFloat(childrenReservationPriceUSD),
           withoutPromoAdultsPrice: parseFloat(withoutPromoPriceUSD),
         },
         mxn: {
           adultsPrice: parseFloat(adultsPriceMXN),
           childrenPrice: parseFloat(childrenPriceMXN),
-          adultsReservationPrice: parseFloat(adultsReservationPriceMXN),
-          childrenReservationPrice: parseFloat(childrenReservationPriceMXN),
           withoutPromoAdultsPrice: parseFloat(withoutPromoPriceMXN),
         },
       },
@@ -432,66 +401,6 @@ export default function TourForm({
         onWheel={(ev) => ev.preventDefault()}
         min={1} // Agregamos esta línea para evitar números negativos o 0
       />
-      <label>¿Se puede reservar?</label>
-      <div className="flex">
-        <label className="w-2">Sí</label>
-        <input
-          type="radio"
-          name="opcion"
-          value={reservation}
-          onChange={(ev) => setReservation(true)}
-        />
-      </div>
-      <div className="flex content-center">
-        <label className="w-2">No</label>
-        <input
-          type="radio"
-          name="opcion"
-          value={reservation}
-          onChange={(ev) => setReservation(false)}
-        />
-      </div>
-      <div></div>
-      {reservation === true ? (
-        <div>
-          <label>Precio de la reserva para adultos</label>
-          <input
-            type="number"
-            placeholder="Precio reserva en USD"
-            value={adultsReservationPriceUSD}
-            onChange={(ev) => setAdultsReservationPriceUSD(ev.target.value)}
-            onWheel={(ev) => ev.preventDefault()}
-            min={1} // Agregamos esta línea para evitar números negativos o 0
-          />
-          <input
-            type="number"
-            placeholder="Precio reserva en MXN"
-            value={adultsReservationPriceMXN}
-            onChange={(ev) => setAdultsReservationPriceMXN(ev.target.value)}
-            onWheel={(ev) => ev.preventDefault()}
-            min={1} // Agregamos esta línea para evitar números negativos o 0
-          />
-          <label>Precio de la reserva para niños</label>
-          <input
-            type="number"
-            placeholder="Precio reserva para niños en USD"
-            value={childrenReservationPriceUSD}
-            onChange={(ev) => setChildrenReservationPriceUSD(ev.target.value)}
-            onWheel={(ev) => ev.preventDefault()}
-            min={0} // Agregamos esta línea para evitar números negativos o 0
-          />
-          <input
-            type="number"
-            placeholder="Precio reserva para niños en MXN"
-            value={childrenReservationPriceMXN}
-            onChange={(ev) => setChildrenReservationPriceMXN(ev.target.value)}
-            onWheel={(ev) => ev.preventDefault()}
-            min={0} // Agregamos esta línea para evitar números negativos o 0
-          />
-        </div>
-      ) : (
-        <div></div>
-      )}
       <label>Fotos</label>
       <div className="mb-2 flex flex-wrap gap-1">
         <ReactSortable

@@ -134,21 +134,6 @@ function Nav({ show, swal }) {
           Ordenes
         </Link>
         <Link
-          href={"/reservation"}
-          className={`${
-            pathname.includes("/reservation") ? activeLink : inactiveLink
-          } transform transition-transform duration-300`}
-          onMouseEnter={(e) => {
-            e.target.classList.add("scale-110");
-          }}
-          onMouseLeave={(e) => {
-            e.target.classList.remove("scale-110");
-          }}
-        >
-          <AutoStoriesIcon />
-          Reservas
-        </Link>
-        <Link
           href={"/settings"}
           className={`${
             pathname.includes("/settings") ? activeLink : inactiveLink
