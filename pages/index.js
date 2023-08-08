@@ -310,15 +310,6 @@ export default function Home() {
   const last5Tours = tourData.slice(-5);
   const uniqueNames = [...new Set(last5Tours.map((tour) => tour.name))];
   const uniquePrices = [...new Set(last5Tours.map((tour) => tour.price))];
-  console.log(
-    uniquePrices.map((adultsPrice) => {
-      return (
-        last5Tours.find(
-          (tour) => tour.price && tour.price?.usd?.adultsPrice === adultsPrice
-        )?.price?.usd?.adultsPrice || 0
-      );
-    })
-  );
   const tourPricesData = {
     labels: uniqueNames,
     datasets: [

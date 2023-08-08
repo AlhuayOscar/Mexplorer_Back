@@ -34,10 +34,13 @@ function Nav({ show, swal }) {
         }
       });
   }
+  const showNavFromLocalStorage = localStorage.getItem("showNav");
+  const showNav = showNavFromLocalStorage === "true"; // Convertimos el valor a booleano
+
   return (
     <aside
       className={
-        (show ? "left-0" : "-left-full") +
+        (showNav ? "left-0" : "-left-full") +
         " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"
       }
     >

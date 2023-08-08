@@ -201,7 +201,6 @@ export default function TourForm({
       schedule,
     };
 
-    console.log(data);
     if (_id) {
       // Update existing tour
       try {
