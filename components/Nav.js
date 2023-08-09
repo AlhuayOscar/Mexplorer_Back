@@ -34,6 +34,7 @@ function Nav({ show, swal }) {
         }
       });
   }
+  
   const showNavFromLocalStorage = localStorage.getItem("showNav");
   const showNav = showNavFromLocalStorage === "true"; // Convertimos el valor a booleano
 
