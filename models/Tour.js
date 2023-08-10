@@ -8,21 +8,16 @@ const TourSchema = new Schema({
   description: { type: String },
   descriptionEng: { type: String },
   duration: { type: Number, required: true },
-  reservation: { type: Boolean, required: true },
   price: {
     mxn: {
       adultsPrice: { type: Number },
       childrenPrice: { type: Number },
-      adultsReservationPrice: { type: Number },
-      childrenReservationPrice: { type: Number },
       withoutPromoAdultsPrice: { type: Number },
       currency: { type: String, default: "MXN" },
     },
     usd: {
       adultsPrice: { type: Number},
       childrenPrice: { type: Number },
-      adultsReservationPrice: { type: Number },
-      childrenReservationPrice: { type: Number },
       withoutPromoAdultsPrice: { type: Number },
       currency: { type: String, default: "USD" },
     },
