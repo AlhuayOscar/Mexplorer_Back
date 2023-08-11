@@ -240,6 +240,24 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
+  if (isLoading || status === "loading") {
+    return (
+      <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
+        <img
+          src="/mex_logo.png"
+          alt="Logo de México"
+          className="mt-4 max-w-350px min-w-350px max-h-full animate-fadeIn"
+        />
+        <h1 className="mb-4 text-white">Cargando...</h1>
+        <GridLoader
+          size={15}
+          color={"#fff"}
+          loading={true}
+          speedMultiplier={0.7}
+        />
+      </div>
+    );
+  }
 
   const lineChartData = {
     labels: [
@@ -276,25 +294,6 @@ export default function Home() {
     ],
   };
 
-  if (isLoading || status === "loading") {
-    return (
-      <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
-        <img
-          src="/mex_logo.png"
-          alt="Logo de México"
-          className="mt-4 max-w-350px min-w-350px max-h-full animate-fadeIn"
-        />
-        <h1 className="mb-4 text-white">Cargando...</h1>
-        <GridLoader
-          size={15}
-          color={"#fff"}
-          loading={true}
-          speedMultiplier={0.7}
-        />
-      </div>
-    );
-  }
-
   const tourCountData = {
     labels: ["Con reserva", "Sin reserva"],
     datasets: [
@@ -309,7 +308,12 @@ export default function Home() {
 
   const last5Tours = tourData.slice(-5);
   const uniqueNames = [...new Set(last5Tours.map((tour) => tour.name))];
-  const uniquePrices = [...new Set(last5Tours.map((tour) => tour.price))];
+  const uniquePrices = [
+    ...new Set(last5Tours.map((tour) => tour.price.usd.adultsPrice)),
+  ];
+  console.log(last5Tours);
+  console.log(uniquePrices);
+
   const tourPricesData = {
     labels: uniqueNames,
     datasets: [
@@ -337,16 +341,16 @@ export default function Home() {
     ],
   };
 
-  const barChartData = {
-    labels: recentTours,
-    datasets: [
-      {
-        label: "Tours más recientes",
-        data: [10, 20, 15, 5], // Aquí debes proporcionar los datos reales correspondientes a los tours recientes
-        backgroundColor: backgroundColors[0],
-      },
-    ],
-  };
+  // const barChartData = {
+  //   labels: recentTours,
+  //   datasets: [
+  //     {
+  //       label: "Cantidad de Compras",
+  //       data: [10, 20, 15, 5], // Aquí debes proporcionar los datos reales correspondientes a los tours recientes
+  //       backgroundColor: backgroundColors[0],
+  //     },
+  //   ],
+  // };
 
   const chartOptions = {
     responsive: true,
@@ -389,7 +393,7 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="flex flex-row justify-evenly">
+      {/* <div className="flex flex-row justify-evenly">
         <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
           <h3 className="text-center">Cantidad de reservas </h3>
           <Bar
@@ -398,7 +402,7 @@ export default function Home() {
             className="pixelated-chart"
           />
         </div>
-      </div>
+      </div> */}
       <div className="max-w-[1400px] max-h-[1400px] shadow-md rounded-lg p-5">
         <h3 className="text-center">Tour con más ventas</h3>
         <Line
