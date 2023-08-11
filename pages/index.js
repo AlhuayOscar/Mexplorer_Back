@@ -42,6 +42,7 @@ export default function Home() {
   const [valuesByMonth, setValuesByMonth] = useState([]);
   const [filteredValueMonths, setFilteredValueMonths] = useState([]);
   const [filteredOrdersMonth, setFilteredOrdersMonth] = useState([]);
+  const [isPopupShown, setIsPopupShown] = useState(false);
 
   useEffect(() => {
     if (session) {
@@ -240,24 +241,37 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
-  if (isLoading || status === "loading") {
-    return (
-      <div className="bg-stone-800 flex flex-col justify-center items-center h-screen">
-        <img
-          src="/mex_logo.png"
-          alt="Logo de México"
-          className="mt-4 max-w-350px min-w-350px max-h-full animate-fadeIn"
-        />
-        <h1 className="mb-4 text-white">Cargando...</h1>
-        <GridLoader
-          size={15}
-          color={"#fff"}
-          loading={true}
-          speedMultiplier={0.7}
-        />
-      </div>
-    );
-  }
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      if (
+        !isPopupShown && // Verificamos si la ventana emergente aún no se ha mostrado
+        (window.innerWidth <= 1000 ||
+          window.innerWidth <= 800 ||
+          window.innerWidth <= 600 ||
+          window.innerWidth > 1900)
+      ) {
+        setIsPopupShown(true); // Marcamos que la ventana emergente se ha mostrado
+        Swal.fire({
+          title: "Debe refrescar la página",
+          text: "La resolución ha cambiado. Para mejorar la calidad de los Gráficos, refresca la página.",
+          icon: "info",
+          confirmButtonText: "Refrescar",
+          showCancelButton: true,
+          cancelButtonText: "Omitir",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleWindowResize);
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, [isPopupShown]); // Agregamos isPopupShown como dependencia
 
   const lineChartData = {
     labels: [
@@ -354,6 +368,7 @@ export default function Home() {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
   };
 
   return (
@@ -367,8 +382,8 @@ export default function Home() {
           <span className="px-2">{session?.user?.name}</span>
         </div>
       </div>
-      <div className="flex flex-row justify-evenly">
-        <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
+      <div className="flex flex-col sm:flex-row justify-evenly items-center">
+        <div className="max-w-[400px] max-h-[500px] shadow-md rounded-lg p-5">
           <h3 className="text-center">Cantidad de Tours</h3>
           <Doughnut
             data={tourCountData}
@@ -376,7 +391,7 @@ export default function Home() {
             className="pixelated-chart"
           />
         </div>
-        <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
+        <div className="max-w-[400px] max-h-[500px] shadow-md rounded-lg p-5">
           <h3 className="text-center">Precios de Últimos 5 Tours</h3>
           <Doughnut
             data={tourPricesData}
@@ -384,7 +399,7 @@ export default function Home() {
             className="pixelated-chart"
           />
         </div>
-        <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
+        <div className="max-w-[400px] max-h-[500px] shadow-md rounded-lg p-5">
           <h3 className="text-center">Promociones</h3>
           <Doughnut
             data={promoData}
@@ -393,23 +408,18 @@ export default function Home() {
           />
         </div>
       </div>
-      {/* <div className="flex flex-row justify-evenly">
-        <div className="max-w-[400px] max-h-[400px] shadow-md rounded-lg p-5">
-          <h3 className="text-center">Cantidad de reservas </h3>
-          <Bar
-            data={barChartData}
+      <div className="max-w-[400px] shadow-md rounded-lg p-5 flex flex-col items-center justify-center mx-auto my-auto">
+        <h3 className="text-center">Tour con más ventas</h3>
+        <div
+          className="chart-container"
+          style={{ width: "100%", height: "250px" }}
+        >
+          <Line
+            data={lineChartData}
             options={chartOptions}
             className="pixelated-chart"
           />
         </div>
-      </div> */}
-      <div className="max-w-[1400px] max-h-[1400px] shadow-md rounded-lg p-5">
-        <h3 className="text-center">Tour con más ventas</h3>
-        <Line
-          data={lineChartData}
-          options={chartOptions}
-          className="pixelated-chart"
-        />
       </div>
     </Layout>
   );
