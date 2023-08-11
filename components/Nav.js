@@ -44,7 +44,9 @@ function Nav({ show, swal }) {
         " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"
       }
     >
-      <div className="mb-4 mr-4">
+      <div
+        className={`mb-4 mr-4 ${window.innerWidth < 786 ? "hidden" : "block"}`}
+      >
         <Logo />
       </div>
       <nav className="flex flex-col gap-2">
