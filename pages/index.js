@@ -8,13 +8,12 @@ import {
   ArcElement,
   LinearScale,
   Tooltip,
-  BarElement,
   PointElement,
   LineElement,
   Legend,
   Title,
 } from "chart.js";
-import { Doughnut, Bar, Line } from "react-chartjs-2";
+import { Doughnut, Line } from "react-chartjs-2";
 import { chartColors, backgroundColors } from "./api/graphSettings.js";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -23,7 +22,6 @@ ChartJS.register(
   ArcElement,
   Tooltip,
   LinearScale,
-  BarElement,
   Legend,
   PointElement,
   LineElement,
@@ -297,14 +295,6 @@ export default function Home() {
         fill: false,
         data: filteredOrdersMonth,
       },
-      {
-        type: "bar",
-        label: productNames,
-        backgroundColor: "rgb(75, 192, 192, 0.5)",
-        data: filteredOrdersMonth,
-        borderColor: "white",
-        borderWidth: 2,
-      },
     ],
   };
 
@@ -355,16 +345,6 @@ export default function Home() {
     ],
   };
 
-  // const barChartData = {
-  //   labels: recentTours,
-  //   datasets: [
-  //     {
-  //       label: "Cantidad de Compras",
-  //       data: [10, 20, 15, 5], // Aquí debes proporcionar los datos reales correspondientes a los tours recientes
-  //       backgroundColor: backgroundColors[0],
-  //     },
-  //   ],
-  // };
 
   const chartOptions = {
     responsive: true,
